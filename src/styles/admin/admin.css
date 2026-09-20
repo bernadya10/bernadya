@@ -1712,49 +1712,7 @@ textarea:focus {
 .custom-sidebar-scrollbar-thumb:hover {
     background: #f5d76e !important;
 }
-/* =========================================================
-   SIDEBAR DESKTOP - SCROLLBAR VISUAL
-   Track selalu terlihat
-   ========================================================= */
 
-@media (min-width: 900px) {
-
-  .sidebar {
-    position: relative !important;
-    box-sizing: border-box !important;
-
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-
-    /* Sembunyikan scrollbar bawaan browser */
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-
-  .sidebar::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-  }
-
-  /* Garis track permanen */
-  .sidebar::after {
-    content: "" !important;
-
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-
-    width: 7px !important;
-
-    background: #eef1f5 !important;
-    border-left: 1px solid #e1e1e1 !important;
-
-    pointer-events: none !important;
-    z-index: 9999 !important;
-  }
-
-}
 @media (min-width: 900px) {
 
   html,
