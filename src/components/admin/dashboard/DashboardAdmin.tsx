@@ -36,6 +36,7 @@ type Karyawan = {
   no_rekening?: string;
   nama_ibu_kandung?: string;
   gaji_pokok?: number;
+  tanggal_lahir?: string;
   tanggal_masuk?: string;
   status_aktif?: boolean;
   status_karyawan?: string;
