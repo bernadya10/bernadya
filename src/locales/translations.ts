@@ -1,0 +1,42 @@
+export const translations: Record<string, Record<string, string>> = {
+  id: {
+    dashboard: 'Beranda',
+    employees: 'Semua Karyawan',
+    payroll_calc: 'Kalkulasi Payroll',
+    payroll_control: 'Kontrol Payroll',
+    settings: 'Pengaturan',
+    save: 'Simpan',
+  },
+  en: {
+    dashboard: 'Dashboard',
+    employees: 'All Employees',
+    payroll_calc: 'Payroll Calculation',
+    payroll_control: 'Payroll Control',
+    settings: 'Settings',
+    save: 'Save',
+  },
+  ja: {
+    dashboard: 'ダッシュボード',
+    employees: '全従業員',
+    payroll_calc: '給与計算',
+    payroll_control: '給与コントロール',
+    settings: '設定',
+    save: '保存',
+  },
+  ko: {
+    dashboard: '대시보드',
+    employees: '모든 직원',
+    payroll_calc: '급여 계산',
+    payroll_control: '급여 제어',
+    settings: '설정',
+    save: '저장',
+  },
+  zh: {
+    dashboard: '仪表盘',
+    employees: '所有员工',
+    payroll_calc: '薪酬计算',
+    payroll_control: '薪酬控制',
+    settings: '设置',
+    save: '保存',
+  },
+};

@@ -1,0 +1,67 @@
+{
+  "version": "56.0.0",
+  "name": "MoonXprojecT Enterprise Experience",
+  "database": "intentionally unchanged",
+  "modules": [
+    {
+      "id": "employee360",
+      "title": "Employee 360",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "scheduling",
+      "title": "Shift & Scheduling",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "approvals",
+      "title": "Unified Approval Center",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "notifications",
+      "title": "Notification Center",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "documents",
+      "title": "Document Management",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "security",
+      "title": "Security Center",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "self_service",
+      "title": "Employee Self-Service",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "reports",
+      "title": "Advanced Reporting",
+      "status": "frontend-ready"
+    },
+    {
+      "id": "suggestions",
+      "title": "Suggestion Box",
+      "status": "frontend-ready",
+      "audience": [
+        "employee",
+        "super_admin"
+      ]
+    },
+    {
+      "id": "announcements",
+      "title": "Announcement Center",
+      "status": "frontend-ready",
+      "audience": [
+        "employee",
+        "admin",
+        "hrd",
+        "super_admin"
+      ]
+    }
+  ]
+}

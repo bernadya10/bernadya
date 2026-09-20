@@ -1,0 +1,41 @@
+/* Project by Tirta public design system */
+.public-home{min-height:100vh;background:#F7F9FC;color:#0B1736}
+.public-header{height:78px;max-width:1240px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.public-brand{display:flex;align-items:center;gap:11px}
+.public-brand img{width:42px;height:42px;object-fit:contain;background:#0B1736;border:1px solid #D6B56A;border-radius:12px;padding:6px}
+.public-brand strong{display:block;font-size:15px;letter-spacing:-.2px}
+.public-brand span{display:block;color:#64748B;font-size:10px;margin-top:2px}
+.public-header nav{display:flex;align-items:center;gap:22px}
+.public-header nav a{color:#64748B;text-decoration:none;font-size:12px;font-weight:650}
+.public-header nav a:hover{color:#0B1736}
+.public-login-link{border:0;background:transparent;color:#0B1736;font-size:12px;font-weight:800}
+.public-cta,.public-primary{border:1px solid #D6B56A;background:#0B1736;color:#fff;border-radius:10px;font-weight:800}
+.public-cta{height:40px;padding:0 17px;font-size:11px}
+.public-hero{max-width:1240px;margin:0 auto;min-height:610px;padding:70px 55px 60px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:45px}
+.public-hero-copy{max-width:640px}
+.public-eyebrow{color:#D6B56A;font-size:9px;letter-spacing:2px;font-weight:900}
+.public-hero h1{font-size:clamp(46px,5.5vw,76px);line-height:1;letter-spacing:-4px;margin:18px 0 22px;color:#0B1736}
+.public-hero h1 em{font-style:normal;color:#64748B}
+.public-hero p{max-width:570px;color:#64748B;font-size:15px;line-height:1.8;margin:0 0 28px}
+.public-actions{display:flex;gap:10px;flex-wrap:wrap}
+.public-primary,.public-secondary{height:47px;padding:0 19px;font-size:11px;cursor:pointer}
+.public-primary{box-shadow:0 12px 28px rgba(11,23,54,.16)}
+.public-primary:hover{transform:translateY(-1px)}
+.public-secondary{border:1px solid #D6DDE8;background:#fff;color:#0B1736;border-radius:10px;font-weight:800}
+.public-secondary:hover{border-color:#D6B56A}
+.public-trust{display:flex;align-items:center;gap:8px;margin-top:24px;color:#94A3B8;font-size:9px}
+.public-trust span{color:#22A06B}.public-trust i{width:1px;height:11px;background:#D8DEE8}
+.moon-hero-visual{position:relative;min-height:450px;display:grid;place-items:center}
+.moon-hero-visual img{width:230px;height:230px;object-fit:contain;position:relative;z-index:3;filter:drop-shadow(0 20px 40px rgba(11,23,54,.18))}
+.moon-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(214,181,106,.26),rgba(214,181,106,0) 68%);filter:blur(8px)}
+.moon-orbit{position:absolute;border:1px solid rgba(214,181,106,.35);border-radius:50%}
+.orbit-one{width:380px;height:190px;transform:rotate(-20deg)}
+.orbit-two{width:430px;height:250px;transform:rotate(24deg)}
+.moon-caption{position:absolute;bottom:25px;text-align:center;display:flex;flex-direction:column;gap:4px;z-index:4}
+.moon-caption b{font-size:9px;letter-spacing:2px;color:#0B1736}.moon-caption span{font-size:10px;color:#64748B}
+.public-features{max-width:1120px;margin:0 auto;padding:0 25px 60px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.public-features article{background:#fff;border:1px solid #E5EAF2;border-radius:14px;padding:17px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 24px rgba(15,23,42,.035)}
+.public-features article>span{width:34px;height:34px;border-radius:10px;background:#FBF5E7;color:#D6B56A;display:grid;place-items:center;font-size:11px;font-weight:900}
+.public-features b{display:block;font-size:10px;color:#0B1736}.public-features small{display:block;color:#94A3B8;font-size:8px;line-height:1.4;margin-top:3px}
+@media(max-width:900px){.public-header{padding:0 20px}.public-header nav a{display:none}.public-hero{grid-template-columns:1fr;padding:55px 25px 35px}.moon-hero-visual{min-height:330px}.public-features{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.public-header{height:70px}.public-cta{display:none}.public-hero{padding:42px 20px}.public-hero h1{font-size:47px;letter-spacing:-2.5px}.public-hero p{font-size:13px}.moon-hero-visual img{width:180px;height:180px}.orbit-one{width:300px;height:150px}.orbit-two{width:330px;height:190px}.public-features{grid-template-columns:1fr;padding:0 20px 40px}}
