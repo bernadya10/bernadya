@@ -1810,3 +1810,26 @@ textarea:focus {
   }
 
 }
+/* =========================================================
+   FONT JUDUL MENU SIDEBAR DESKTOP
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+  .sidebar .nav-title {
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  .sidebar .nav-title span {
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.2px !important;
+  }
+
+}
