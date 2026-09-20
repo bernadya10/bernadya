@@ -1880,3 +1880,129 @@ textarea:focus {
   }
 
 }
+/* =========================================================
+   DETAIL KARYAWAN — PROFESSIONAL CARD
+   ========================================================= */
+
+.employee-detail-card {
+  width: min(980px, calc(100vw - 32px));
+  max-height: min(88vh, 900px);
+  overflow: hidden;
+  background: #ffffff;
+  color: #172033;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+}
+
+.employee-detail-card .export-head {
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  border-bottom: 1px solid #e5e7eb;
+  padding: 22px 24px;
+}
+
+.employee-detail-card .export-head span {
+  color: #b58a2a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.employee-detail-card .export-head h2 {
+  margin: 5px 0 4px;
+  color: #172033;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.employee-detail-card .export-head p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.employee-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px 24px;
+  max-height: calc(88vh - 180px);
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.detail-section {
+  background: #ffffff;
+  border: 1px solid #e6e9ef;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.detail-section h3 {
+  margin: 0 0 13px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf0f4;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f3f6;
+}
+
+.detail-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.detail-item span {
+  flex: 0 0 42%;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.detail-item b {
+  flex: 1;
+  min-width: 0;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.employee-detail-card .export-foot {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 14px 24px;
+}
+
+@media (max-width: 700px) {
+  .employee-detail-card {
+    width: calc(100vw - 20px);
+    max-height: 92vh;
+    border-radius: 15px;
+  }
+
+  .employee-detail-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    max-height: calc(92vh - 170px);
+  }
+
+  .employee-detail-card .export-head {
+    padding: 18px;
+  }
+
+  .employee-detail-card .export-foot {
+    padding: 12px 14px;
+  }
+}
+

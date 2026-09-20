@@ -673,9 +673,25 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
  const [open,setOpen]=useState(false);
   const [detail,setDetail]=useState<Karyawan|null>(null);
  const available=[
-  ['id_karyawan','ID Karyawan'],['nama','Nama'],['nik_ktp','NIK'],['email','Email'],['no_telp','No. HP'],
-  ['departemen','Departemen'],['jabatan','Jabatan'],['tanggal_masuk','Tanggal Masuk'],['status_karyawan','Status Karyawan'],
-  ['status_aktif','Status Aktif'],['alamat_rumah','Alamat'],['gaji_pokok','Gaji Pokok']
+  ["id_karyawan","ID Karyawan"],
+  ["nama","Nama"],
+  ["nik_ktp","NIK KTP"],
+  ["tempat_lahir","Tempat Lahir"],
+  ["tanggal_lahir","Tanggal Lahir"],
+  ["bank","Bank"],
+  ["no_rekening","No. Rekening"],
+  ["nama_ibu_kandung","Nama Ibu Kandung"],
+  ["jabatan","Jabatan"],
+  ["departemen","Departemen"],
+  ["email","Email"],
+  ["no_telp","No. Telp"],
+  ["alamat_rumah","Alamat Rumah"],
+  ["tanggal_masuk","Tanggal Masuk"],
+  ["status_karyawan","Status Karyawan"],
+  ["status_aktif","Status Aktif"],
+  ["gaji_pokok","Gaji Pokok"],
+  ["role","Role"],
+  ["email_terverifikasi","Email Terverifikasi"]
  ] as const;
  const [selected,setSelected]=useState<string[]>(available.slice(0,9).map(x=>x[0]));
  const toggle=(key:string)=>setSelected(v=>v.includes(key)?v.filter(x=>x!==key):[...v,key]);
