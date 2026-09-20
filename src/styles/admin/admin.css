@@ -1713,21 +1713,20 @@ textarea:focus {
     background: #f5d76e !important;
 }
 /* =========================================================
-   SIDEBAR DESKTOP - TRACK SCROLLBAR PERMANEN
+   SIDEBAR DESKTOP - SCROLLBAR VISUAL
+   Track selalu terlihat
    ========================================================= */
 
 @media (min-width: 900px) {
 
-  /* Sidebar */
   .sidebar {
     position: relative !important;
     box-sizing: border-box !important;
 
-    /* Tetap bisa di-scroll */
     overflow-y: auto !important;
     overflow-x: hidden !important;
 
-    /* Sembunyikan scrollbar native */
+    /* Sembunyikan scrollbar bawaan browser */
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }
@@ -1737,12 +1736,11 @@ textarea:focus {
     width: 0 !important;
   }
 
-  /* TRACK VERTIKAL PERMANEN */
+  /* Garis track permanen */
   .sidebar::after {
     content: "" !important;
 
     position: absolute !important;
-
     top: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
@@ -1750,11 +1748,9 @@ textarea:focus {
     width: 7px !important;
 
     background: #eef1f5 !important;
-
     border-left: 1px solid #e1e1e1 !important;
 
     pointer-events: none !important;
-
     z-index: 9999 !important;
   }
 
