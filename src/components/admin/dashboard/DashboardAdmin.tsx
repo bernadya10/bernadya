@@ -685,7 +685,14 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
    </div>
  </div>}
  <div className="panel table-panel"><div className="table-wrap"><table><thead><tr><th>Nama</th><th>ID</th><th>Jabatan</th><th>Departemen</th><th>Status</th><th>Gaji Pokok</th><th>Aksi</th></tr></thead><tbody>{data.length?data.map(k=><tr key={k.id}><td><div className="person"><div className="mini-avatar">{k.nama?.[0]||'K'}</div><b>{k.nama}</b></div></td><td>{k.id_karyawan||'-'}</td><td>{k.jabatan||'-'}</td><td>{k.departemen||'-'}</td><td><Status value={k.status_aktif===false?'Nonaktif':'Aktif'}/></td><td>{money(Number(k.gaji_pokok||0))}</td><td>
-  <div className="row-actions"><button className="link-btn" onClick={()=>onEdit(k)}>Edit</button>
+  <div className="row-actions">
+  <button className="link-btn" onClick={()=>alert(Detail karyawan: ${k.nama})}>
+    Detail
+  </button>
+  <button className="link-btn" onClick={()=>onEdit(k)}>
+    Edit
+  </button>
+
     {k.email&&<button className="link-btn" onClick={()=>onConfirmEmail(k)} disabled={!!k.email_terverifikasi}>{k.email_terverifikasi?'✓ Email Terverifikasi':!k.auth_user_id?'Akun Belum Terhubung':'Konfirmasi Email'}</button>}
     <button className="danger-text" onClick={()=>onDelete(k)}>Hapus</button>
   </div>
