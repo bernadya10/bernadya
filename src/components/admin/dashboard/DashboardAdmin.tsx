@@ -31,8 +31,11 @@ type Karyawan = {
   no_telp?: string;
   alamat_rumah?: string;
   nik_ktp?: string;
+  tempat_lahir?: string;
+  bank?: string;
+  no_rekening?: string;
+  nama_ibu_kandung?: string;
   gaji_pokok?: number;
-  tanggal_lahir?: string;
   tanggal_masuk?: string;
   status_aktif?: boolean;
   status_karyawan?: string;
@@ -667,6 +670,7 @@ function AttendanceMini({rows}:{rows:Absensi[]}){return <div className="table-wr
 
 function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Karyawan[];onDelete:(k:Karyawan)=>void;onEdit:(k:Karyawan)=>void;onExport:(columns:string[],format:'csv'|'excel')=>void;onAdd:()=>void;onConfirmEmail:(k:Karyawan)=>void}){
  const [open,setOpen]=useState(false);
+  const [detail,setDetail]=useState<Karyawan|null>(null);
  const available=[
   ['id_karyawan','ID Karyawan'],['nama','Nama'],['nik_ktp','NIK'],['email','Email'],['no_telp','No. HP'],
   ['departemen','Departemen'],['jabatan','Jabatan'],['tanggal_masuk','Tanggal Masuk'],['status_karyawan','Status Karyawan'],
@@ -684,9 +688,69 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
     <div className="export-foot"><button className="secondary" onClick={()=>setOpen(false)}>Batal</button><button className="secondary" disabled={!selected.length} onClick={()=>{onExport(selected,'csv');setOpen(false)}}>Download CSV</button><button className="primary" disabled={!selected.length} onClick={()=>{onExport(selected,'excel');setOpen(false)}}>Download Excel</button></div>
    </div>
  </div>}
+   {detail&&(
+  <div className="export-backdrop" onMouseDown={e=>{if(e.currentTarget===e.target)setDetail(null)}}>
+    <div className="export-card employee-detail-card">
+      <div className="export-head">
+        <div>
+          <span>PEOPLE · DETAIL</span>
+          <h2>Detail Karyawan</h2>
+          <p>Data lengkap karyawan yang tersimpan di database.</p>
+        </div>
+        <button className="icon-btn" onClick={()=>setDetail(null)}>×</button>
+      </div>
+
+      <div className="employee-detail-grid">
+
+        <div className="detail-section">
+          <h3>Identitas</h3>
+          <div className="detail-item"><span>ID Karyawan</span><b>{detail.id_karyawan||'—'}</b></div>
+          <div className="detail-item"><span>Nama</span><b>{detail.nama||'—'}</b></div>
+          <div className="detail-item"><span>NIK KTP</span><b>{detail.nik_ktp||'—'}</b></div>
+          <div className="detail-item"><span>Tempat Lahir</span><b>{detail.tempat_lahir||'—'}</b></div>
+          <div className="detail-item"><span>Tanggal Lahir</span><b>{detail.tanggal_lahir||'—'}</b></div>
+          <div className="detail-item"><span>Nama Ibu Kandung</span><b>{detail.nama_ibu_kandung||'—'}</b></div>
+        </div>
+
+        <div className="detail-section">
+          <h3>Pekerjaan</h3>
+          <div className="detail-item"><span>Jabatan</span><b>{detail.jabatan||'—'}</b></div>
+          <div className="detail-item"><span>Departemen</span><b>{detail.departemen||'—'}</b></div>
+          <div className="detail-item"><span>Tanggal Masuk</span><b>{detail.tanggal_masuk||'—'}</b></div>
+          <div className="detail-item"><span>Status Karyawan</span><b>{detail.status_karyawan||'—'}</b></div>
+          <div className="detail-item"><span>Status Aktif</span><b>{detail.status_aktif===true?'Aktif':detail.status_aktif===false?'Nonaktif':'—'}</b></div>
+          <div className="detail-item"><span>Role</span><b>{detail.role||'—'}</b></div>
+        </div>
+
+        <div className="detail-section">
+          <h3>Kontak</h3>
+          <div className="detail-item"><span>Email</span><b>{detail.email||'—'}</b></div>
+          <div className="detail-item"><span>Email Terverifikasi</span><b>{detail.email_terverifikasi===true?'Terverifikasi':detail.email_terverifikasi===false?'Belum Terverifikasi':'—'}</b></div>
+          <div className="detail-item"><span>No. Telp</span><b>{detail.no_telp||'—'}</b></div>
+          <div className="detail-item"><span>Alamat Rumah</span><b>{detail.alamat_rumah||'—'}</b></div>
+        </div>
+
+        <div className="detail-section">
+          <h3>Bank & Penggajian</h3>
+          <div className="detail-item"><span>Bank</span><b>{detail.bank||'—'}</b></div>
+          <div className="detail-item"><span>No. Rekening</span><b>{detail.no_rekening||'—'}</b></div>
+          <div className="detail-item"><span>Gaji Pokok</span><b>{detail.gaji_pokok!=null?money(Number(detail.gaji_pokok)):'—'}</b></div>
+        </div>
+
+      </div>
+
+      <div className="export-foot">
+        <button className="secondary" onClick={()=>setDetail(null)}>Tutup</button>
+        <button className="primary" onClick={()=>{onEdit(detail);setDetail(null)}}>Edit Data</button>
+      </div>
+    </div>
+  </div>
+)}
+Terkirim
+Tul
  <div className="panel table-panel"><div className="table-wrap"><table><thead><tr><th>Nama</th><th>ID</th><th>Jabatan</th><th>Departemen</th><th>Status</th><th>Gaji Pokok</th><th>Aksi</th></tr></thead><tbody>{data.length?data.map(k=><tr key={k.id}><td><div className="person"><div className="mini-avatar">{k.nama?.[0]||'K'}</div><b>{k.nama}</b></div></td><td>{k.id_karyawan||'-'}</td><td>{k.jabatan||'-'}</td><td>{k.departemen||'-'}</td><td><Status value={k.status_aktif===false?'Nonaktif':'Aktif'}/></td><td>{money(Number(k.gaji_pokok||0))}</td><td>
   <div className="row-actions">
-  <button className="link-btn" onClick={()=>alert(Detail karyawan: ${k.nama})}>
+  <button className="link-btn" onClick={()=>setDetail(k)}>
     Detail
   </button>
   <button className="link-btn" onClick={()=>onEdit(k)}>
