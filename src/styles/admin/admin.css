@@ -1742,3 +1742,71 @@ textarea:focus {
   }
 
 }
+/* =========================================================
+   DESKTOP SIDEBAR - SCROLLBAR YANG IKUT BERGERAK
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+  .sidebar {
+    position: sticky !important;
+    top: 0 !important;
+
+    height: 100vh !important;
+    max-height: 100vh !important;
+
+    box-sizing: border-box !important;
+
+    /* PENTING:
+       scrollbar selalu disediakan dan bisa bergerak */
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+
+    /* Firefox */
+    scrollbar-width: thin !important;
+    scrollbar-color: #c9a227 #eef1f5 !important;
+  }
+
+  /* Chrome / Edge / Firefox desktop */
+  .sidebar::-webkit-scrollbar {
+    width: 8px !important;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: #eef1f5 !important;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #c9a227 !important;
+    border-radius: 8px !important;
+    min-height: 40px !important;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background: #a98216 !important;
+  }
+
+  /* =======================================================
+     SEMUA JUDUL GROUP MENU DIBUAT KONSISTEN
+     ======================================================= */
+
+  .sidebar .nav-group {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .sidebar .nav-title {
+    width: 100% !important;
+    box-sizing: border-box !important;
+
+    min-height: 48px !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    padding: 0 14px !important;
+  }
+
+}
