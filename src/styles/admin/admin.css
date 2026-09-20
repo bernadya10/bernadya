@@ -1755,3 +1755,32 @@ textarea:focus {
   }
 
 }
+@media (min-width: 900px) {
+
+  html,
+  body,
+  #root {
+    min-height: 100vh !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+
+  .talenta-shell {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+
+    overflow: hidden !important;
+  }
+
+  .talenta-main {
+    height: 100vh !important;
+    min-height: 0 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box !important;
+  }
+
+}
