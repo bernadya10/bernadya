@@ -139,7 +139,7 @@ function Icon({ name }: { name: string }) {
   return <svg className="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d}/></svg>;
 }
 export default function DashboardAdmin() {
-  const { lang, setLang, t } = useTranslation();
+  const { t } = useTranslation();
 
   // 1. Deklarasi State diletakkan paling atas di dalam komponen
   const [logged, setLogged] = useState(false);
@@ -499,68 +499,18 @@ return (
 
      
       
-      {/* ===== BAGIAN BAWAH SIDEBAR (PROFIL, BAHASA, & LOGOUT) ===== */}
+      {/* ===== BAGIAN BAWAH SIDEBAR ===== */}
       <div className="sidebar-bottom">
-        
-        {/* Dropdown Pemilih Bahasa */}
-        {sidebar && (
-  <div
-  style={{
-    padding: '4px 12px 12px 12px',
-    borderBottom: '1px solid #e2e7ee',
-    marginBottom: '8px',
-  }}
->
-    <div style={{
-  fontSize: '11px',
-  color: '#475467', marginBottom: '4px', fontWeight: 500, letterSpacing: '0.5px' }}>
-      BAHASA / LANGUAGE
-    </div>
-    <select 
-      value={lang} 
-      onChange={(e) => setLang(e.target.value)}
-      style={{ 
-        width: '100%', 
-        padding: '8px 12px', 
-        borderRadius: '8px', 
-        border: '1px solid rgba(255, 255, 255, 0.15)', 
-        background: 'rgba(255, 255, 255, 0.07)', 
-        color: '#ffffff',
-        fontSize: '13px', 
-        fontWeight: 500,
-        outline: 'none',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)')}
-      onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.07)')}
-    >
-      <option value="id" style={{ background: '#1e293b', color: '#fff' }}>🇮🇩 Indonesia</option>
-      <option value="en" style={{ background: '#1e293b', color: '#fff' }}>🇬🇧 English</option>
-      <option value="ja" style={{ background: '#1e293b', color: '#fff' }}>🇯🇵 日本語</option>
-      <option value="ko" style={{ background: '#1e293b', color: '#fff' }}>🇰🇷 한국어</option>
-      <option value="zh" style={{ background: '#1e293b', color: '#fff' }}>🇨🇳 中文</option>
-    </select>
-  </div>
-)}
-        {/* Informasi Admin */}
-        <div className="admin-mini">
-          <div className="avatar">HR</div>
-          {sidebar && <div><b>{userRole || 'User'}</b><small>Project by Tirta Access</small></div>}
-        </div>
-
-        {/* Tombol Logout */}
         <button className="logout" onClick={async () => {
           await signOut();
           setLogged(false);
-          setUserRole('');
+          setUserRole("");
           setDbPerms([]);
-          setMenu('overview');
-          location.hash = '/home';
+          setMenu("overview");
+          location.hash = "/home";
         }}>
-          <Icon name="logout"/>{sidebar && 'Keluar'}
+          <Icon name="logout"/>{sidebar && "Keluar"}
         </button>
-
       </div>
       {/* ======================================================== */}
     </aside>
