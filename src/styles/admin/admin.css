@@ -1833,3 +1833,50 @@ textarea:focus {
   }
 
 }
+/* =========================================================
+   JUDUL SIDEBAR TANPA BINGKAI - GOLD
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+  .sidebar .nav-title {
+    height: auto !important;
+    min-height: 40px !important;
+
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+
+    border-radius: 0 !important;
+
+    padding: 8px 12px !important;
+
+    color: #c9a227 !important;
+
+    font-size: 13px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  .sidebar .nav-title span {
+    color: #c9a227 !important;
+
+    font-size: 13px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  /* Panah tetap gold */
+  .sidebar .nav-title svg {
+    color: #c9a227 !important;
+  }
+
+  /* Saat diarahkan mouse tetap tanpa bingkai */
+  .sidebar .nav-title:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+}
