@@ -278,6 +278,7 @@ export default function DashboardAdmin() {
           setUserRole(p.role || '');
           setProfileName(p.nama || '');
           const { data: rp } = await supabase.from('hris_role_permissions').select('permission_code').eq('role_name', p.role);
+          loadProfilePhoto();
           if (active) { setDbPerms((rp || []).map(x => x.permission_code)); setEmail(data.user.email); setLogged(true); }
         } else if (active) { await supabase.auth.signOut(); setLogged(false); }
       }
@@ -555,11 +556,8 @@ return (
    <main className="talenta-main"><header className="topbar">
 <button className="icon-btn" aria-label="Buka menu" onClick={()=>setSidebar(v=>!v)}><Icon name="menu"/></button>
 <div className="crumb"><span>Project by Tirta</span><b>/</b>{activeLabel}</div>
-<div className="floating-role-wrap">
-  <button type="button" className="floating-role" onClick={()=>setRoleOpen(v=>!v)} aria-expanded={roleOpen}><span className="role-shield">♜</span><strong>{userRole || 'User'}</strong><Icon name="chevronDown"/></button>
   {roleOpen && <div className="role-menu"><small>ROLE AKTIF</small>{['Super Admin','Admin','HRD','Payroll','Supervisor','Karyawan'].map(r=><button type="button" key={r} className={r===userRole?'selected':''} onClick={()=>{setRoleOpen(false); if(r!==userRole)setToast(`Role ${r} hanya dapat diubah melalui Role & Permission.`)}}>{r===userRole?'✓':' '} {r}</button>)}</div>}
-</div>
-<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>HR</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);setToast(`Role aktif: ${userRole || "User"}`)}}><span>🛡️</span>Role</button><button type="button" onClick={()=>{setProfileOpen(false);setToast("Pengaturan bahasa akan tersedia di Pengaturan.")}}><span>🌐</span>Bahasa</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("settings")}}><span>⚙️</span>Pengaturan</button><div className="profile-menu-divider"/><button type="button" className="profile-logout" onClick={async()=>{setProfileOpen(false);await signOut();setLogged(false);setEmail("");setUserRole("");setProfileName("");setDbPerms([])}}><span>🚪</span>Logout</button></div>}</div></div></header>
+<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);setToast(`Role aktif: ${userRole || "User"}`)}}><span>🛡️</span>Role</button><button type="button" onClick={()=>{setProfileOpen(false);setToast("Pengaturan bahasa akan tersedia di Pengaturan.")}}><span>🌐</span>Bahasa</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("settings")}}><span>⚙️</span>Pengaturan</button><div className="profile-menu-divider"/><button type="button" className="profile-logout" onClick={async()=>{setProfileOpen(false);await signOut();setLogged(false);setEmail("");setUserRole("");setProfileName("");setDbPerms([])}}><span>🚪</span>Logout</button></div>}</div></div></header>
               {profilePanelOpen && <div className="profile-panel-overlay" onClick={()=>setProfilePanelOpen(false)}>
                 <div className="profile-panel" onClick={e=>e.stopPropagation()}>
                   <div className="profile-panel-head">
@@ -595,7 +593,7 @@ return (
               </div>}
 
     <section className="page">{loading&&<div className="loading">Memuat data…</div>}{error&&<div className="alert">{error}</div>}
-    {menu==='overview'&&<Overview employees={employees} attendance={attendance} present={present} late={late} payroll={payroll} onNavigate={navigate}/>}
+    {menu==='overview'&&<Overview employees={employees} attendance={attendance} present={present} late={late} payroll={payroll} onNavigate={navigate} profileName={profileName}/>}
     {menu==='id-card'&&<IDCardModule employees={employees} companyName="Project by Tirta" logoUrl={moonLogo}/> }
     {menu==='employees'&&<Employees data={filtered} onDelete={removeEmployee} onEdit={setEditing} onExport={(columns, format)=>format==='excel' ? exportExcel(employees as any,'database-karyawan.xls',columns) : exportCsv(employees as any,'database-karyawan.csv',columns)} onAdd={()=>navigate('employee-add')} onConfirmEmail={confirmEmployeeEmail}/> }
     {menu==='employee-360'&&<Employee360 employees={employees}/>}
@@ -649,7 +647,7 @@ function Heading({
   );
 }
 
-function Overview({employees,attendance,present,late,payroll,onNavigate}:{employees:Karyawan[];attendance:Absensi[];present:number;late:number;payroll:number;onNavigate:(m:MenuKey)=>void}){
+function Overview({employees,attendance,present,late,payroll,onNavigate,profileName}:{employees:Karyawan[];attendance:Absensi[];present:number;late:number;payroll:number;onNavigate:(m:MenuKey)=>void;profileName:string}){
  const active=employees.filter(k=>k.status_aktif!==false).length;
  const inactive=Math.max(0,employees.length-active);
  const absent=Math.max(0,employees.length-present-late);
@@ -659,7 +657,7 @@ function Overview({employees,attendance,present,late,payroll,onNavigate}:{employ
  const deptRows=Object.entries(dept).sort((a,b)=>b[1]-a[1]).slice(0,5);
  const maxDept=Math.max(1,...deptRows.map(x=>x[1]));
  return <div className="executive-dashboard">
-  <Heading title="HR Command Center" desc="Ringkasan workforce, attendance, dan payroll dalam satu pusat kendali." action="Tambah Karyawan" onAction={()=>onNavigate('employee-add')}/>
+  <Heading title={profileName || "HR Command Center"} desc="Ringkasan workforce, attendance, dan payroll dalam satu pusat kendali." action="Tambah Karyawan" onAction={()=>onNavigate('employee-add')}/>
   <div className="command-strip">
    <div><span className="eyebrow">OPERATIONAL STATUS</span><strong>Sistem HR aktif</strong><small>Data tersinkron dari database</small></div>
    <div className="strip-meta"><span className="status green">Operational</span><span>Update otomatis saat halaman dimuat</span></div>
