@@ -799,11 +799,103 @@ Tul
   </div>
 </td></tr>):<Empty cols={7}/>}</tbody></table></div></div></>
 }
-function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}){
- const [f,setF]=useState({id_karyawan:'',nama:'',jabatan:'',email:'',no_telp:'',departemen:'',tanggal_masuk:'',gaji_pokok:''}),[saving,setSaving]=useState(false),[msg,setMsg]=useState('');
- async function save(e:FormEvent){e.preventDefault();setSaving(true);setMsg('');const payload={...f,gaji_pokok:Number(f.gaji_pokok||0),status_aktif:true};const {error:e2}=await supabase.from('karyawan').insert(payload);setSaving(false);if(e2)setMsg(e2.message);else{refresh();onDone()}}
- return <><Heading title="Tambah Karyawan" desc="Simpan profil baru langsung ke tabel karyawan."/><div className="panel form-panel"><form className="form-grid" onSubmit={save}>{Object.entries(f).map(([k,v])=><label key={k}>{fieldLabel(k)}<input required={['id_karyawan','nama'].includes(k)} type={k==='gaji_pokok'?'number':k==='tanggal_masuk'?'date':'text'} value={String(v ?? '')} onChange={e=>setF({...f,[k]:e.target.value})}/></label>)}{msg&&<div className="form-error full-span">{msg}</div>}<div className="full-span form-actions"><button type="button" className="secondary" onClick={onDone}>Batal</button><button className="primary" disabled={saving}>{saving?'Menyimpan…':'Simpan Karyawan'}</button></div></form></div></>
+function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}) {
+  const [f,setF]=useState({
+    nik_ktp:'',
+    id_karyawan:'',
+    nama:'',
+    tempat_lahir:'',
+    tanggal_lahir:'',
+    alamat_rumah:'',
+    no_telp:'',
+    email:'',
+    nama_ibu_kandung:'',
+    departemen:'',
+    jabatan:'',
+    status_karyawan:'Tetap',
+    tanggal_masuk:'',
+    atasan_id:'',
+    gaji_pokok:'',
+    bank_name:'',
+    bank_account:''
+  }),[saving,setSaving]=useState(false),[msg,setMsg]=useState('');
+
+  async function save(e:FormEvent){
+    e.preventDefault();
+    setSaving(true);
+    setMsg('');
+
+    const payload={
+      ...f,
+      gaji_pokok:Number(f.gaji_pokok||0),
+      status_aktif:true
+    };
+
+    const {error:e2}=await supabase.from('karyawan').insert(payload);
+
+    setSaving(false);
+
+    if(e2)setMsg(e2.message);
+    else{
+      refresh();
+      onDone();
+    }
+  }
+
+  const labels:Record<string,string>={
+    nik_ktp:'NIK KTP',
+    id_karyawan:'ID Karyawan',
+    nama:'Nama',
+    tempat_lahir:'Tempat Lahir',
+    tanggal_lahir:'Tanggal Lahir',
+    alamat_rumah:'Alamat Rumah',
+    no_telp:'No. Telepon',
+    email:'Email',
+    nama_ibu_kandung:'Nama Ibu Kandung',
+    departemen:'Departemen',
+    jabatan:'Jabatan',
+    status_karyawan:'Status Karyawan',
+    tanggal_masuk:'Tanggal Masuk',
+    atasan_id:'Atasan',
+    gaji_pokok:'Gaji Pokok',
+    bank_name:'Nama Bank',
+    bank_account:'Nomor Rekening'
+  };
+
+  return <><Heading title="Tambah Karyawan" desc="Simpan profil baru langsung ke tabel karyawan."/>
+    <div className="panel form-panel">
+      <form className="form-grid" onSubmit={save}>
+        {Object.entries(f).map(([k,v])=>
+          <label key={k}>{labels[k]||fieldLabel(k)}
+            {k==='status_karyawan' ? (
+              <select value={String(v??'')} onChange={e=>setF({...f,[k]:e.target.value})}>
+                <option value="Tetap">Tetap</option>
+                <option value="Kontrak">Kontrak</option>
+                <option value="Harian">Harian</option>
+                <option value="Probation">Probation</option>
+              </select>
+            ) : (
+              <input
+                required={['id_karyawan','nama'].includes(k)}
+                type={k==='gaji_pokok'?'number':(['tanggal_lahir','tanggal_masuk'].includes(k)?'date':k==='email'?'email':'text')}
+                value={String(v??'')}
+                onChange={e=>setF({...f,[k]:e.target.value})}
+              />
+            )}
+          </label>
+        )}
+        {msg&&<div className="form-error full-span">{msg}</div>}
+        <div className="full-span form-actions">
+          <button type="button" className="secondary" onClick={onDone}>Batal</button>
+          <button className="primary" disabled={saving}>
+            {saving?'Menyimpan…':'Simpan Karyawan'}
+          </button>
+        </div>
+      </form>
+    </div>
+  </>
 }
+
 function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onClose: () => void; onSave: (p: Record<string, unknown>) => void }) {
   const [f, setF] = useState({
     id_karyawan: employee.id_karyawan || '',
