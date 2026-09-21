@@ -430,3 +430,382 @@ button:disabled {
 .forgot-panel input{height:40px!important}.forgot-panel small{display:block;margin-top:7px;color:#64748B;font-size:10px}.forgot-panel>div{display:flex;justify-content:flex-end;gap:7px;margin-top:10px}
 .forgot-panel .primary,.forgot-panel .secondary{height:34px;padding:0 12px;border-radius:8px;border:0;font-size:10px;font-weight:800}
 .forgot-panel .primary{background:#0B1736;color:#fff}.forgot-panel .secondary{background:#fff;border:1px solid #D9E0EA!important;color:#475569}
+
+/* =========================================================
+   PROJECT BY TIRTA — HR DASHBOARD THEME OVERRIDE
+   Public / Home / Login / Loading
+   ========================================================= */
+
+:root{
+  --hr-navy:#0b1736;
+  --hr-navy-2:#17284a;
+  --hr-gold:#c5a15b;
+  --hr-gold-soft:#f6f0e3;
+  --hr-silver:#e5eaf2;
+  --hr-bg:#f4f7fb;
+  --hr-text:#172033;
+  --hr-muted:#718096;
+}
+
+/* ---------- PUBLIC / HOME BACKGROUND ---------- */
+
+.unified-login-page{
+  background:
+    radial-gradient(circle at 12% 10%,rgba(197,161,91,.10),transparent 28%),
+    radial-gradient(circle at 88% 90%,rgba(23,40,74,.10),transparent 32%),
+    linear-gradient(135deg,#f7f9fc 0%,#eef2f7 100%);
+  position:relative;
+  overflow:hidden;
+}
+
+.unified-login-page::before{
+  content:"";
+  position:absolute;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  border:1px solid rgba(197,161,91,.10);
+  right:-180px;
+  top:-180px;
+  pointer-events:none;
+}
+
+.unified-login-page::after{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  border:1px solid rgba(11,23,54,.06);
+  left:-150px;
+  bottom:-150px;
+  pointer-events:none;
+}
+
+/* ---------- LOGIN CARD ---------- */
+
+.unified-login-card{
+  position:relative;
+  z-index:1;
+  border:1px solid var(--hr-silver);
+  border-radius:16px;
+  background:rgba(255,255,255,.98);
+  box-shadow:
+    0 18px 45px rgba(16,24,40,.09),
+    0 3px 10px rgba(16,24,40,.04);
+}
+
+.unified-login-card.compact{
+  border-radius:14px;
+}
+
+/* ---------- BRAND ---------- */
+
+.unified-logo{
+  background:linear-gradient(135deg,var(--hr-navy),var(--hr-navy-2));
+  border:1px solid var(--hr-gold);
+  color:#e2bd72;
+  box-shadow:0 5px 16px rgba(11,23,54,.15);
+}
+
+.unified-brand{
+  gap:11px;
+  margin-bottom:32px;
+}
+
+.unified-brand strong{
+  color:var(--hr-navy);
+  font-size:15px;
+  letter-spacing:-.15px;
+}
+
+.unified-brand small{
+  color:#8994a7;
+  font-size:10px;
+}
+
+/* ---------- HEADING ---------- */
+
+.unified-login-heading{
+  margin-bottom:23px;
+}
+
+.unified-login-heading>span{
+  margin-bottom:7px;
+  color:#a67c22;
+  font-size:9px;
+  letter-spacing:1.4px;
+}
+
+.unified-login-heading h1{
+  color:var(--hr-navy);
+  font-size:26px;
+  line-height:1.2;
+  letter-spacing:-.55px;
+}
+
+.unified-login-heading p{
+  color:#718096;
+  font-size:12px;
+  line-height:1.55;
+}
+
+/* ---------- FORM ---------- */
+
+.unified-login-form{
+  gap:15px;
+}
+
+.unified-login-form label{
+  gap:6px;
+}
+
+.unified-login-form label>span{
+  color:#344054;
+  font-size:11px;
+  font-weight:750;
+}
+
+.unified-login-form input{
+  height:43px;
+  border-color:#d9dee8;
+  border-radius:8px;
+  font-size:12px;
+  color:#172033;
+}
+
+.unified-login-form input:focus{
+  border-color:#294b7d;
+  box-shadow:0 0 0 3px rgba(41,75,125,.09);
+}
+
+/* ---------- PRIMARY BUTTON ---------- */
+
+.unified-login-button{
+  height:44px;
+  margin-top:3px;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--hr-navy),var(--hr-navy-2));
+  border:1px solid var(--hr-navy);
+  font-size:12px;
+  font-weight:750;
+  box-shadow:0 4px 12px rgba(11,23,54,.14);
+}
+
+.unified-login-button:hover:not(:disabled){
+  background:linear-gradient(135deg,#17284a,#243b69);
+  box-shadow:0 7px 18px rgba(11,23,54,.18);
+  transform:translateY(-1px);
+}
+
+/* ---------- REGISTER ---------- */
+
+.unified-login-register{
+  margin-top:19px;
+  color:#7b8799;
+  font-size:11px;
+}
+
+.unified-login-register button{
+  color:#a67c22;
+  font-size:11px;
+}
+
+/* ---------- SECURITY ---------- */
+
+.unified-login-security{
+  margin-top:21px;
+  padding:10px 12px;
+  border-color:#e5eaf2;
+  border-radius:9px;
+  background:#f8fafc;
+  gap:9px;
+}
+
+.unified-login-security>span{
+  width:28px;
+  height:28px;
+  border-radius:7px;
+  background:#eef2f7;
+  font-size:12px;
+}
+
+.unified-login-security strong{
+  color:#344054;
+  font-size:10px;
+}
+
+.unified-login-security small{
+  color:#8490a2;
+  font-size:9px;
+}
+
+/* =========================================================
+   HR STYLE LOADING
+   ========================================================= */
+
+.unified-loading{
+  position:relative;
+  z-index:1;
+  width:min(360px,calc(100% - 40px));
+  min-height:112px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  padding:22px;
+  border:1px solid #dfe5ee;
+  border-radius:14px;
+  background:rgba(255,255,255,.97);
+  color:#53647c;
+  font-size:11px;
+  font-weight:650;
+  box-shadow:
+    0 16px 40px rgba(16,24,40,.09),
+    0 2px 8px rgba(16,24,40,.04);
+}
+
+.unified-loading::before{
+  content:"";
+  width:29px;
+  height:29px;
+  border-radius:50%;
+  border:3px solid #e5eaf2;
+  border-top-color:var(--hr-gold);
+  border-right-color:var(--hr-navy);
+  animation:hr-loading-spin .85s linear infinite;
+}
+
+.unified-loading::after{
+  content:"HR COMMAND CENTER";
+  position:absolute;
+  top:9px;
+  left:0;
+  right:0;
+  text-align:center;
+  color:#98a2b3;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:1.5px;
+}
+
+@keyframes hr-loading-spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* =========================================================
+   LOGIN MODAL
+   ========================================================= */
+
+.modal-overlay{
+  background:rgba(7,16,36,.56);
+  backdrop-filter:blur(8px);
+}
+
+.unified-login-card.login-modal-card{
+  border-color:#dfe5ee;
+  border-radius:16px;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.25),
+    0 5px 18px rgba(0,0,0,.08);
+}
+
+.login-modal-close{
+  width:29px;
+  height:29px;
+  right:11px;
+  top:11px;
+  background:#f5f7fa;
+  color:#64748b;
+  font-size:18px;
+}
+
+.login-modal-close:hover{
+  background:#edf1f6;
+  color:#172033;
+}
+
+/* =========================================================
+   MENU / CARD TEXT — SYMMETRY
+   ========================================================= */
+
+/* Semua tombol/menu yang berada di area public */
+.unified-login-page button{
+  line-height:1.2;
+}
+
+/* Hindari text menempel/bergeser ketika bahasa berubah */
+.unified-login-page button,
+.unified-login-page label,
+.unified-login-page small,
+.unified-login-page strong{
+  overflow-wrap:anywhere;
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media(max-width:600px){
+
+  .unified-login-page{
+    padding:18px 12px;
+  }
+
+  .unified-login-card{
+    width:100%;
+    max-width:420px;
+    padding:23px 19px;
+    border-radius:14px;
+  }
+
+  .unified-brand{
+    margin-bottom:27px;
+  }
+
+  .unified-logo,
+  .moon-logo{
+    width:48px;
+    height:48px;
+  }
+
+  .unified-login-heading h1{
+    font-size:23px;
+  }
+
+  .unified-login-heading p{
+    font-size:11px;
+  }
+
+  .unified-login-form input{
+    height:42px;
+  }
+
+  .unified-login-button{
+    height:43px;
+  }
+
+  .unified-loading{
+    width:calc(100% - 28px);
+    min-height:105px;
+  }
+}
+
+@media(max-width:380px){
+
+  .unified-login-card{
+    padding:21px 16px;
+  }
+
+  .unified-brand strong{
+    font-size:14px;
+  }
+
+  .unified-login-heading h1{
+    font-size:21px;
+  }
+}
+

@@ -126,7 +126,8 @@ if (email === 'windapermatasari1807@gmail.com') {
         .from('karyawan')
         .update({
           auth_user_id: user.id,
-        })
+            foto_url: user.user_metadata?.foto_url || null,
+          })
         .eq('id', employee.id);
     }
 

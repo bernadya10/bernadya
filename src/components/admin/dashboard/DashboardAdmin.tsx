@@ -32,9 +32,11 @@ type Karyawan = {
   alamat_rumah?: string;
   nik_ktp?: string;
   tempat_lahir?: string;
-  bank?: string;
-  no_rekening?: string;
+  bank_name?: string;
+  bank_account?: string;
   nama_ibu_kandung?: string;
+  jenis_kelamin?: string;
+  status_pernikahan?: string;
   gaji_pokok?: number;
   tanggal_lahir?: string;
   tanggal_masuk?: string;
@@ -139,7 +141,7 @@ function Icon({ name }: { name: string }) {
   return <svg className="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d}/></svg>;
 }
 export default function DashboardAdmin() {
-  const { t } = useTranslation();
+  const { t, lang, setLang } = useTranslation();
 
   // 1. Deklarasi State diletakkan paling atas di dalam komponen
   const [logged, setLogged] = useState(false);
@@ -155,7 +157,7 @@ export default function DashboardAdmin() {
   const [toast, setToast] = useState('');
   const [editing, setEditing] = useState<Karyawan | null>(null);
   const [userRole, setUserRole] = useState('');
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false); const [languageOpen, setLanguageOpen] = useState(false);
   const [profileName, setProfileName] = useState('');
   const [profilePanelOpen, setProfilePanelOpen] = useState(false);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
@@ -176,7 +178,7 @@ export default function DashboardAdmin() {
     {
       title: 'PEOPLE',
       items: [
-        ['employees', t('employees') || 'Semua Karyawan', 'users'] as [MenuKey, string, string],
+        ['employees', t('employees') || t('employees'), 'users'] as [MenuKey, string, string],
         ['id-card', 'ID Card', 'card'] as [MenuKey, string, string],
         ['employee-360', 'Employee 360°', 'users'] as [MenuKey, string, string],
         ['organization', 'Organisasi', 'org'] as [MenuKey, string, string],
@@ -184,71 +186,71 @@ export default function DashboardAdmin() {
       ]
     },
     {
-      title: 'ATTENDANCE',
+      title: t('attendance'),
       items: [
-        ['attendance', 'Rekap Absensi', 'clock'] as [MenuKey, string, string],
-        ['attendance-today', 'Absensi Hari Ini', 'check'] as [MenuKey, string, string],
-        ['late', 'Keterlambatan', 'alert'] as [MenuKey, string, string],
-        ['leave', 'Izin & Sakit', 'leave'] as [MenuKey, string, string],
-        ['overtime', 'Lembur', 'arrow'] as [MenuKey, string, string],
-        ['selfie', 'Monitoring Selfie', 'camera'] as [MenuKey, string, string]
+        ['attendance', t('attendance_summary'), 'clock'] as [MenuKey, string, string],
+        ['attendance-today', t('attendance_today'), 'check'] as [MenuKey, string, string],
+        ['late', t('late'), 'alert'] as [MenuKey, string, string],
+        ['leave', t('leave_sick'), 'leave'] as [MenuKey, string, string],
+        ['overtime', t('overtime'), 'arrow'] as [MenuKey, string, string],
+        ['selfie', t('selfie_monitoring'), 'camera'] as [MenuKey, string, string]
       ]
     },
     {
-      title: 'PAYROLL',
+      title: t('payroll'),
       items: [
-        ['payroll', 'Monthly Payroll', 'payroll'] as [MenuKey, string, string],
-        ['production-hr', 'HR Transaction Center', 'settings'] as [MenuKey, string, string],
+        ['payroll', t('monthly_payroll'), 'payroll'] as [MenuKey, string, string],
+        ['production-hr', t('hr_transaction_center'), 'settings'] as [MenuKey, string, string],
         ['payroll-engine', t('payroll_calc') || 'Payroll Calculation', 'payroll'] as [MenuKey, string, string],
         ['payroll-production-v22', t('payroll_control') || 'Payroll Control', 'payroll'] as [MenuKey, string, string],
-        ['payroll-components', 'Salary Components', 'components'] as [MenuKey, string, string],
-        ['payroll-overtime', 'Overtime Payroll', 'arrow'] as [MenuKey, string, string],
-        ['payslip', 'Payslip', 'calendar'] as [MenuKey, string, string]
+        ['payroll-components', t('salary_components'), 'components'] as [MenuKey, string, string],
+        ['payroll-overtime', t('overtime_payroll'), 'arrow'] as [MenuKey, string, string],
+        ['payslip', t('payslip'), 'calendar'] as [MenuKey, string, string]
       ]
     },
     {
-      title: 'TALENT',
+      title: t('talent'),
       items: [
-        ['performance', 'Performance', 'arrow'] as [MenuKey, string, string],
-        ['kpi', 'KPI & Target', 'kpi'] as [MenuKey, string, string],
-        ['recruitment-v25', 'Recruitment ATS Enterprise', 'recruitment'] as [MenuKey, string, string],
-        ['recruitment', 'Recruitment Legacy', 'recruitment'] as [MenuKey, string, string],
-        ['candidates', 'Kandidat', 'users'] as [MenuKey, string, string]
+        ['performance', t('performance'), 'arrow'] as [MenuKey, string, string],
+        ['kpi', t('kpi_target'), 'kpi'] as [MenuKey, string, string],
+        ['recruitment-v25', t('recruitment_ats'), 'recruitment'] as [MenuKey, string, string],
+        ['recruitment', t('recruitment_legacy'), 'recruitment'] as [MenuKey, string, string],
+        ['candidates', t('candidates'), 'users'] as [MenuKey, string, string]
       ]
     },
     {
-      title: 'ENTERPRISE SUITE',
+      title: t('enterprise_suite'),
       items: [
-        ['enterprise-v26', 'Documents & Compliance', 'request'] as [MenuKey, string, string],
-        ['enterprise-v27', 'Performance & KPI', 'kpi'] as [MenuKey, string, string],
-        ['enterprise-v28', 'HR Analytics & BI', 'kpi'] as [MenuKey, string, string],
-        ['enterprise-v29', 'HR Inbox', 'bell'] as [MenuKey, string, string],
-        ['enterprise-v30', 'ESS Enterprise', 'users'] as [MenuKey, string, string],
-        ['enterprise-v31', 'QA & Testing', 'check'] as [MenuKey, string, string],
-        ['enterprise-v32', 'Production Optimization', 'settings'] as [MenuKey, string, string],
+        ['enterprise-v26', t('documents_compliance'), 'request'] as [MenuKey, string, string],
+        ['enterprise-v27', t('performance_kpi'), 'kpi'] as [MenuKey, string, string],
+        ['enterprise-v28', t('hr_analytics'), 'kpi'] as [MenuKey, string, string],
+        ['enterprise-v29', t('hr_inbox'), 'bell'] as [MenuKey, string, string],
+        ['enterprise-v30', t('ess_enterprise'), 'users'] as [MenuKey, string, string],
+        ['enterprise-v31', t('qa_testing'), 'check'] as [MenuKey, string, string],
+        ['enterprise-v32', t('production_optimization'), 'settings'] as [MenuKey, string, string],
         ['enterprise-v33', 'Multi-Company', 'org'] as [MenuKey, string, string],
         ['enterprise-v34', 'API & Integrations', 'settings'] as [MenuKey, string, string],
         ['enterprise-v35', 'AI HR & Automation', 'kpi'] as [MenuKey, string, string]
       ]
     },
     {
-      title: 'REPORTING',
+      title: t('reporting'),
       items: [
-        ['reports', 'Laporan', 'report'] as [MenuKey, string, string]
+        ['reports', t('reports'), 'report'] as [MenuKey, string, string]
       ]
     },
     {
-      title: 'SYSTEM',
+      title: t('system'),
       items: [
         ['enterprise-v20', 'Enterprise Command Center', 'org'] as [MenuKey, string, string],
         ['payroll-indonesia-v23', 'Payroll Indonesia Compliance', 'payroll'] as [MenuKey, string, string],
         ['security-v21', 'Security Center', 'health'] as [MenuKey, string, string],
-        ['approvals', 'Pusat Persetujuan', 'check'] as [MenuKey, string, string],
-        ['notifications', 'Notifikasi', 'bell'] as [MenuKey, string, string],
-        ['system-health', 'System Health', 'health'] as [MenuKey, string, string],
+        ['approvals', t('approvals'), 'check'] as [MenuKey, string, string],
+        ['notifications', t('notifications'), 'bell'] as [MenuKey, string, string],
+        ['system-health', t('system_health'), 'health'] as [MenuKey, string, string],
         ['settings', t('settings') || 'Pengaturan', 'settings'] as [MenuKey, string, string],
-        ['roles', 'Role & Permission', 'users'] as [MenuKey, string, string],
-        ['audit', 'Audit Log', 'request'] as [MenuKey, string, string]
+        ['roles', t('roles_permissions'), 'users'] as [MenuKey, string, string],
+        ['audit', t('audit_log'), 'request'] as [MenuKey, string, string]
       ]
     }
   ], [t]);
@@ -557,7 +559,16 @@ return (
 <button className="icon-btn" aria-label="Buka menu" onClick={()=>setSidebar(v=>!v)}><Icon name="menu"/></button>
 <div className="crumb"><span>Project by Tirta</span><b>/</b>{activeLabel}</div>
   {roleOpen && <div className="role-menu"><small>ROLE AKTIF</small>{['Super Admin','Admin','HRD','Payroll','Supervisor','Karyawan'].map(r=><button type="button" key={r} className={r===userRole?'selected':''} onClick={()=>{setRoleOpen(false); if(r!==userRole)setToast(`Role ${r} hanya dapat diubah melalui Role & Permission.`)}}>{r===userRole?'✓':' '} {r}</button>)}</div>}
-<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);setToast(`Role aktif: ${userRole || "User"}`)}}><span>🛡️</span>Role</button><button type="button" onClick={()=>{setProfileOpen(false);setToast("Pengaturan bahasa akan tersedia di Pengaturan.")}}><span>🌐</span>Bahasa</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("settings")}}><span>⚙️</span>Pengaturan</button><div className="profile-menu-divider"/><button type="button" className="profile-logout" onClick={async()=>{setProfileOpen(false);await signOut();setLogged(false);setEmail("");setUserRole("");setProfileName("");setDbPerms([])}}><span>🚪</span>Logout</button></div>}</div></div></header>
+<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("roles")}}><span>🛡️</span>Role</button><div className="profile-language">
+  <button type="button" onClick={()=>setLanguageOpen(v=>!v)}><span>🌐</span>Bahasa <small>{lang.toUpperCase()} ▾</small></button>
+  {languageOpen && <div className="profile-language-options">
+    {[['id','Indonesia'],['en','English'],['ja','日本語'],['ko','한국어'],['zh','中文']].map(([code,name])=>
+      <button type="button" key={code} className={lang===code?'selected':''} onClick={async()=>{await setLang(code);setProfileOpen(false)}}>
+        {lang===code?'✓':' '} {name}
+      </button>
+    )}
+  </div>}
+</div><button type="button" onClick={()=>{setProfileOpen(false);navigate("settings")}}><span>⚙️</span>Pengaturan</button><div className="profile-menu-divider"/><button type="button" className="profile-logout" onClick={async()=>{setProfileOpen(false);await signOut();setLogged(false);setEmail("");setUserRole("");setProfileName("");setDbPerms([])}}><span>🚪</span>Logout</button></div>}</div></div></header>
               {profilePanelOpen && <div className="profile-panel-overlay" onClick={()=>setProfilePanelOpen(false)}>
                 <div className="profile-panel" onClick={e=>e.stopPropagation()}>
                   <div className="profile-panel-head">
@@ -690,6 +701,7 @@ function Quick({label,icon,onClick}:{label:string;icon:string;onClick:()=>void})
 function AttendanceMini({rows}:{rows:Absensi[]}){return <div className="table-wrap"><table><thead><tr><th>Karyawan</th><th>Tanggal</th><th>Masuk</th><th>Pulang</th><th>Status</th></tr></thead><tbody>{rows.length?rows.map((a,i)=><tr key={a.id||i}><td><b>{a.nama||'-'}</b><small>{a.id_karyawan||''}</small></td><td>{a.tanggal||'-'}</td><td className="green">{a.jam_masuk||'-'}</td><td>{a.jam_pulang||'-'}</td><td><Status value={a.status||'Hadir'}/></td></tr>):<Empty cols={5}/>}</tbody></table></div>}
 
 function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Karyawan[];onDelete:(k:Karyawan)=>void;onEdit:(k:Karyawan)=>void;onExport:(columns:string[],format:'csv'|'excel')=>void;onAdd:()=>void;onConfirmEmail:(k:Karyawan)=>void}){
+  const { t } = useTranslation();
  const [open,setOpen]=useState(false);
   const [detail,setDetail]=useState<Karyawan|null>(null);
  const available=[
@@ -698,8 +710,10 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
   ["nik_ktp","NIK KTP"],
   ["tempat_lahir","Tempat Lahir"],
   ["tanggal_lahir","Tanggal Lahir"],
-  ["bank","Bank"],
-  ["no_rekening","No. Rekening"],
+  ["jenis_kelamin","Jenis Kelamin"],
+  ["status_pernikahan","Status Pernikahan"],
+["bank_name","Bank"],
+  ["bank_account","No. Rekening"],
   ["nama_ibu_kandung","Nama Ibu Kandung"],
   ["jabatan","Jabatan"],
   ["departemen","Departemen"],
@@ -715,7 +729,7 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
  ] as const;
  const [selected,setSelected]=useState<string[]>(available.slice(0,9).map(x=>x[0]));
  const toggle=(key:string)=>setSelected(v=>v.includes(key)?v.filter(x=>x!==key):[...v,key]);
- return <><Heading title="Semua Karyawan" desc="Master data workforce yang tersimpan di Supabase." action="Tambah Karyawan" onAction={onAdd}/>
+ return <><Heading title={t('employees')} desc="Master data workforce yang tersimpan di Supabase." action="Tambah Karyawan" onAction={onAdd}/>
  <div className="toolbar"><b>{data.length} karyawan</b><button className="secondary" onClick={()=>setOpen(true)}>Export Data</button></div>
  {open&&<div className="export-backdrop" onMouseDown={e=>{if(e.currentTarget===e.target)setOpen(false)}}>
    <div className="export-card">
@@ -746,6 +760,8 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
           <div className="detail-item"><span>NIK KTP</span><b>{detail.nik_ktp||'—'}</b></div>
           <div className="detail-item"><span>Tempat Lahir</span><b>{detail.tempat_lahir||'—'}</b></div>
           <div className="detail-item"><span>Tanggal Lahir</span><b>{detail.tanggal_lahir||'—'}</b></div>
+          <div className="detail-item"><span>Jenis Kelamin</span><b>{detail.jenis_kelamin||'—'}</b></div>
+          <div className="detail-item"><span>Status Pernikahan</span><b>{detail.status_pernikahan||'—'}</b></div>
           <div className="detail-item"><span>Nama Ibu Kandung</span><b>{detail.nama_ibu_kandung||'—'}</b></div>
         </div>
 
@@ -769,8 +785,8 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
 
         <div className="detail-section">
           <h3>Bank & Penggajian</h3>
-          <div className="detail-item"><span>Bank</span><b>{detail.bank||'—'}</b></div>
-          <div className="detail-item"><span>No. Rekening</span><b>{detail.no_rekening||'—'}</b></div>
+          <div className="detail-item"><span>Bank</span><b>{detail.bank_name||'—'}</b></div>
+          <div className="detail-item"><span>No. Rekening</span><b>{detail.bank_account||'—'}</b></div>
           <div className="detail-item"><span>Gaji Pokok</span><b>{detail.gaji_pokok!=null?money(Number(detail.gaji_pokok)):'—'}</b></div>
         </div>
 
@@ -814,7 +830,6 @@ function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}) {
     jabatan:'',
     status_karyawan:'Tetap',
     tanggal_masuk:'',
-    atasan_id:'',
     gaji_pokok:'',
     bank_name:'',
     bank_account:''
@@ -856,7 +871,6 @@ function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}) {
     jabatan:'Jabatan',
     status_karyawan:'Status Karyawan',
     tanggal_masuk:'Tanggal Masuk',
-    atasan_id:'Atasan',
     gaji_pokok:'Gaji Pokok',
     bank_name:'Nama Bank',
     bank_account:'Nomor Rekening'
@@ -898,16 +912,30 @@ function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}) {
 
 function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onClose: () => void; onSave: (p: Record<string, unknown>) => void }) {
   const [f, setF] = useState({
+    nik_ktp: employee.nik_ktp || '',
     id_karyawan: employee.id_karyawan || '',
     nama: employee.nama || '',
-    jabatan: employee.jabatan || '',
-    email: employee.email || '',
+    tempat_lahir: employee.tempat_lahir || '',
+    tanggal_lahir: employee.tanggal_lahir || '',
+    jenis_kelamin: employee.jenis_kelamin || '',
+    alamat_rumah: employee.alamat_rumah || '',
     no_telp: employee.no_telp || '',
+    email: employee.email || '',
+    status_pernikahan: employee.status_pernikahan || '',
+    nama_ibu_kandung: employee.nama_ibu_kandung || '',
     departemen: employee.departemen || '',
+    jabatan: employee.jabatan || '',
+    status_karyawan: employee.status_karyawan || 'Tetap',
     tanggal_masuk: employee.tanggal_masuk || '',
     gaji_pokok: String(employee.gaji_pokok || 0),
+    bank_name: employee.bank_name || '',
+    bank_account: employee.bank_account || '',
     status_aktif: employee.status_aktif !== false
   });
+
+  const setField=(key:string,value:string|boolean)=>{
+    setF(prev=>({...prev,[key]:value}));
+  };
 
   return (
     <div className="drawer-backdrop" onMouseDown={e => { if (e.currentTarget === e.target) onClose(); }}>
@@ -919,29 +947,123 @@ function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onC
           </div>
           <button className="icon-btn" onClick={onClose} type="button">×</button>
         </div>
+
         <div className="drawer-body">
-          {Object.entries(f).filter(([k]) => k !== 'status_aktif').map(([k, v]) => (
-            <label key={k}>
-              {fieldLabel(k)}
-              <input
-                type={k === 'gaji_pokok' ? 'number' : k === 'tanggal_masuk' ? 'date' : 'text'}
-                value={String(v ?? '')}
-                onChange={e => setF({ ...f, [k]: e.target.value })}
-              />
-            </label>
-          ))}
+          <label>NIK KTP
+            <input value={f.nik_ktp} onChange={e=>setField('nik_ktp',e.target.value)} />
+          </label>
+
+          <label>ID Karyawan
+            <input value={f.id_karyawan} onChange={e=>setField('id_karyawan',e.target.value)} />
+          </label>
+
+          <label>Nama
+            <input value={f.nama} onChange={e=>setField('nama',e.target.value)} />
+          </label>
+
+          <label>Tempat Lahir
+            <input value={f.tempat_lahir} onChange={e=>setField('tempat_lahir',e.target.value)} />
+          </label>
+
+          <label>Tanggal Lahir
+            <input type="date" value={f.tanggal_lahir} onChange={e=>setField('tanggal_lahir',e.target.value)} />
+          </label>
+
+          <label>Jenis Kelamin
+            <select value={f.jenis_kelamin} onChange={e=>setField('jenis_kelamin',e.target.value)}>
+              <option value="">Pilih Jenis Kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </label>
+
+          <label>Alamat
+            <input value={f.alamat_rumah} onChange={e=>setField('alamat_rumah',e.target.value)} />
+          </label>
+
+          <label>No. Telepon
+            <input value={f.no_telp} onChange={e=>setField('no_telp',e.target.value)} />
+          </label>
+
+          <label>Email
+            <input type="email" value={f.email} onChange={e=>setField('email',e.target.value)} />
+          </label>
+
+          <label>Status Pernikahan
+            <select value={f.status_pernikahan} onChange={e=>setField('status_pernikahan',e.target.value)}>
+              <option value="">Pilih Status Pernikahan</option>
+              <option value="Belum Menikah">Belum Menikah</option>
+              <option value="Menikah">Menikah</option>
+              <option value="Cerai">Cerai</option>
+            </select>
+          </label>
+
+          <label>Nama Ibu Kandung
+            <input value={f.nama_ibu_kandung} onChange={e=>setField('nama_ibu_kandung',e.target.value)} />
+          </label>
+
+          <label>Departemen
+            <input value={f.departemen} onChange={e=>setField('departemen',e.target.value)} />
+          </label>
+
+          <label>Jabatan
+            <input value={f.jabatan} onChange={e=>setField('jabatan',e.target.value)} />
+          </label>
+
+          <label>Status Karyawan
+            <select value={f.status_karyawan} onChange={e=>setField('status_karyawan',e.target.value)}>
+              <option value="Tetap">Tetap</option>
+              <option value="Kontrak">Kontrak</option>
+              <option value="Harian">Harian</option>
+              <option value="Probation">Probation</option>
+            </select>
+          </label>
+
+          <label>Tanggal Masuk
+            <input type="date" value={f.tanggal_masuk} onChange={e=>setField('tanggal_masuk',e.target.value)} />
+          </label>
+
+          <label>Gaji Pokok
+            <input type="number" value={f.gaji_pokok} onChange={e=>setField('gaji_pokok',e.target.value)} />
+          </label>
+
+          <label>Nama Bank
+            <input value={f.bank_name} onChange={e=>setField('bank_name',e.target.value)} />
+          </label>
+
+          <label>Nomor Rekening
+            <input value={f.bank_account} onChange={e=>setField('bank_account',e.target.value)} />
+          </label>
+
           <label className="switch-row">
             <span>Status Aktif</span>
             <input
               type="checkbox"
               checked={f.status_aktif}
-              onChange={e => setF({ ...f, status_aktif: e.target.checked })}
+              onChange={e=>setField('status_aktif',e.target.checked)}
             />
           </label>
         </div>
+
         <div className="drawer-foot">
           <button type="button" className="secondary" onClick={onClose}>Batal</button>
-          <button type="button" className="primary" onClick={() => { if (!f.id_karyawan.trim()) { alert('ID Karyawan wajib diisi.'); return; } onSave({ ...f, id_karyawan: f.id_karyawan.trim().toUpperCase(), gaji_pokok: Number(f.gaji_pokok || 0) }); }}>Simpan Perubahan</button>
+          <button
+            type="button"
+            className="primary"
+            onClick={() => {
+              if (!f.id_karyawan.trim()) {
+                alert('ID Karyawan wajib diisi.');
+                return;
+              }
+              onSave({
+                ...f,
+                id_karyawan: f.id_karyawan.trim().toUpperCase(),
+                gaji_pokok: Number(f.gaji_pokok || 0)
+              });
+            }}
+          >
+            Simpan Perubahan
+          </button>
         </div>
       </aside>
     </div>

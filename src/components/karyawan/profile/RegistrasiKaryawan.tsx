@@ -92,7 +92,7 @@ export default function RegistrasiKaryawan({ onBack }: RegistrasiKaryawanProps) 
           .from('employee-photos')
           .upload(filePath, photoFile, { upsert: true });
 
-        if (!uploadError) {
+        if (uploadError) { throw uploadError; } else {
           const { data: urlData } = supabase.storage
             .from('employee-photos')
             .getPublicUrl(filePath);

@@ -39,3 +39,536 @@
 .public-features b{display:block;font-size:10px;color:#0B1736}.public-features small{display:block;color:#94A3B8;font-size:8px;line-height:1.4;margin-top:3px}
 @media(max-width:900px){.public-header{padding:0 20px}.public-header nav a{display:none}.public-hero{grid-template-columns:1fr;padding:55px 25px 35px}.moon-hero-visual{min-height:330px}.public-features{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.public-header{height:70px}.public-cta{display:none}.public-hero{padding:42px 20px}.public-hero h1{font-size:47px;letter-spacing:-2.5px}.public-hero p{font-size:13px}.moon-hero-visual img{width:180px;height:180px}.orbit-one{width:300px;height:150px}.orbit-two{width:330px;height:190px}.public-features{grid-template-columns:1fr;padding:0 20px 40px}}
+
+/* =========================================================
+   PROJECT BY TIRTA — HR DASHBOARD HOME THEME
+   Compact / Symmetric / Responsive
+   ========================================================= */
+
+.public-home{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(197,161,91,.08),transparent 25%),
+    linear-gradient(180deg,#f7f9fc 0%,#f1f4f8 100%);
+  color:#172033;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.public-header{
+  height:64px;
+  max-width:1500px;
+  padding:0 28px;
+  border-bottom:1px solid #e5eaf2;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 1px 5px rgba(16,24,40,.03);
+}
+
+.public-brand{
+  gap:9px;
+}
+
+.public-brand img{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  padding:5px;
+  background:#0b1736;
+  border:1px solid #c5a15b;
+}
+
+.public-brand strong{
+  font-size:14px;
+  color:#172033;
+  line-height:1.2;
+}
+
+.public-brand span{
+  color:#98a2b3;
+  font-size:9px;
+  line-height:1.2;
+  margin-top:2px;
+}
+
+.public-header nav{
+  gap:17px;
+}
+
+.public-header nav a{
+  color:#667085;
+  font-size:10px;
+  font-weight:700;
+  transition:color .15s ease;
+}
+
+.public-header nav a:hover{
+  color:#172033;
+}
+
+.public-login-link{
+  color:#344054;
+  font-size:10px;
+}
+
+.public-cta{
+  height:34px;
+  padding:0 14px;
+  border-radius:8px;
+  background:#0b1736;
+  border:1px solid #c5a15b;
+  font-size:10px;
+  box-shadow:0 3px 9px rgba(11,23,54,.12);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.public-hero{
+  max-width:1500px;
+  min-height:500px;
+  padding:55px 55px 42px;
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+  gap:35px;
+}
+
+.public-hero-copy{
+  max-width:620px;
+}
+
+.public-eyebrow{
+  color:#a67c22;
+  font-size:8px;
+  letter-spacing:1.6px;
+  font-weight:850;
+}
+
+.public-hero h1{
+  font-size:clamp(38px,4.8vw,62px);
+  line-height:1.04;
+  letter-spacing:-3px;
+  margin:15px 0 18px;
+  color:#0b1736;
+}
+
+.public-hero h1 em{
+  color:#667085;
+}
+
+.public-hero p{
+  max-width:560px;
+  color:#667085;
+  font-size:12px;
+  line-height:1.65;
+  margin:0 0 23px;
+}
+
+.public-actions{
+  gap:8px;
+}
+
+.public-primary,
+.public-secondary{
+  height:41px;
+  padding:0 16px;
+  border-radius:8px;
+  font-size:10px;
+}
+
+.public-primary{
+  background:linear-gradient(135deg,#0b1736,#17284a);
+  border-color:#c5a15b;
+  box-shadow:0 7px 18px rgba(11,23,54,.14);
+}
+
+.public-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 9px 21px rgba(11,23,54,.18);
+}
+
+.public-secondary{
+  border-color:#d9dee8;
+  color:#344054;
+  background:#fff;
+}
+
+.public-secondary:hover{
+  border-color:#c5a15b;
+  background:#fffdf8;
+}
+
+.public-trust{
+  margin-top:18px;
+  gap:7px;
+  color:#98a2b3;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.public-trust i{
+  height:9px;
+  background:#d9dee8;
+}
+
+/* =========================================================
+   HERO VISUAL
+   ========================================================= */
+
+.moon-hero-visual{
+  min-height:390px;
+}
+
+.moon-hero-visual img{
+  width:205px;
+  height:205px;
+  filter:drop-shadow(0 18px 35px rgba(11,23,54,.15));
+}
+
+.moon-glow{
+  width:310px;
+  height:310px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(197,161,91,.20),
+      rgba(197,161,91,0) 68%
+    );
+}
+
+.moon-orbit{
+  border-color:rgba(197,161,91,.27);
+}
+
+.orbit-one{
+  width:350px;
+  height:175px;
+}
+
+.orbit-two{
+  width:395px;
+  height:225px;
+}
+
+.moon-caption{
+  bottom:12px;
+  gap:3px;
+}
+
+.moon-caption b{
+  color:#172033;
+  font-size:8px;
+  letter-spacing:1.7px;
+}
+
+.moon-caption span{
+  color:#98a2b3;
+  font-size:9px;
+}
+
+/* =========================================================
+   FEATURE CARDS
+   ========================================================= */
+
+.public-features{
+  max-width:1220px;
+  padding:0 25px 45px;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+}
+
+/*
+  Semua card dibuat mempunyai tinggi minimum yang sama.
+  Ini membuat judul + deskripsi tetap sejajar walaupun
+  panjang teks berbeda.
+*/
+
+.public-features article{
+  min-width:0;
+  min-height:76px;
+  padding:13px;
+  border:1px solid #e1e6ee;
+  border-radius:11px;
+  background:#fff;
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  align-items:center;
+  column-gap:9px;
+  box-shadow:0 3px 12px rgba(16,24,40,.035);
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+.public-features article:hover{
+  transform:translateY(-2px);
+  border-color:#d4c08e;
+  box-shadow:0 7px 18px rgba(16,24,40,.07);
+}
+
+.public-features article>span{
+  width:32px;
+  height:32px;
+  flex:none;
+  border-radius:8px;
+  background:#f7f1e4;
+  color:#a67c22;
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:850;
+  border:1px solid #eee2c8;
+}
+
+.public-features article>div{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:40px;
+}
+
+.public-features b{
+  display:block;
+  color:#172033;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.public-features small{
+  display:block;
+  margin-top:3px;
+  color:#98a2b3;
+  font-size:8px;
+  line-height:1.35;
+  min-height:21px;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media(max-width:1000px){
+
+  .public-hero{
+    grid-template-columns:1fr .8fr;
+    padding:48px 35px 38px;
+    gap:20px;
+  }
+
+  .public-hero h1{
+    font-size:clamp(36px,5vw,52px);
+  }
+
+  .moon-hero-visual{
+    min-height:330px;
+  }
+
+  .moon-hero-visual img{
+    width:175px;
+    height:175px;
+  }
+
+  .orbit-one{
+    width:300px;
+    height:150px;
+  }
+
+  .orbit-two{
+    width:340px;
+    height:195px;
+  }
+
+  .public-features{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:700px){
+
+  .public-header{
+    height:60px;
+    padding:0 15px;
+  }
+
+  .public-brand img{
+    width:33px;
+    height:33px;
+  }
+
+  .public-brand strong{
+    font-size:12px;
+  }
+
+  .public-brand span{
+    font-size:8px;
+  }
+
+  .public-header nav{
+    gap:10px;
+  }
+
+  .public-header nav a{
+    display:none;
+  }
+
+  .public-login-link{
+    font-size:9px;
+  }
+
+  .public-cta{
+    display:block;
+    height:31px;
+    padding:0 11px;
+    font-size:9px;
+  }
+
+  .public-hero{
+    min-height:auto;
+    padding:38px 19px 25px;
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+
+  .public-hero h1{
+    font-size:38px;
+    letter-spacing:-2px;
+    line-height:1.05;
+    margin:13px 0 15px;
+  }
+
+  .public-hero p{
+    font-size:11px;
+    line-height:1.6;
+    margin-bottom:19px;
+  }
+
+  .public-primary,
+  .public-secondary{
+    height:39px;
+    padding:0 14px;
+    font-size:9px;
+  }
+
+  .public-trust{
+    flex-wrap:wrap;
+    font-size:7px;
+    margin-top:15px;
+  }
+
+  .moon-hero-visual{
+    min-height:275px;
+  }
+
+  .moon-hero-visual img{
+    width:155px;
+    height:155px;
+  }
+
+  .moon-glow{
+    width:240px;
+    height:240px;
+  }
+
+  .orbit-one{
+    width:270px;
+    height:135px;
+  }
+
+  .orbit-two{
+    width:300px;
+    height:170px;
+  }
+
+  .moon-caption{
+    bottom:0;
+  }
+
+  .public-features{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:0 15px 30px;
+  }
+
+  .public-features article{
+    min-height:72px;
+    padding:11px;
+    grid-template-columns:29px minmax(0,1fr);
+    column-gap:7px;
+  }
+
+  .public-features article>span{
+    width:29px;
+    height:29px;
+    font-size:9px;
+  }
+
+  .public-features b{
+    font-size:9px;
+  }
+
+  .public-features small{
+    font-size:7px;
+  }
+}
+
+/* =========================================================
+   SMALL PHONE
+   ========================================================= */
+
+@media(max-width:400px){
+
+  .public-header{
+    padding:0 12px;
+  }
+
+  .public-brand strong{
+    font-size:11px;
+  }
+
+  .public-login-link{
+    display:none;
+  }
+
+  .public-hero{
+    padding:32px 15px 20px;
+  }
+
+  .public-hero h1{
+    font-size:34px;
+  }
+
+  .public-actions{
+    width:100%;
+  }
+
+  .public-primary,
+  .public-secondary{
+    flex:1;
+    min-width:0;
+    padding:0 9px;
+  }
+
+  .public-features{
+    grid-template-columns:1fr;
+  }
+
+  .public-features article{
+    min-height:68px;
+  }
+}
+
