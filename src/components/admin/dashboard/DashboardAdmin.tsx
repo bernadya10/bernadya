@@ -175,7 +175,6 @@ export default function DashboardAdmin() {
         ['employees', t('employees') || 'Semua Karyawan', 'users'] as [MenuKey, string, string],
         ['id-card', 'ID Card', 'card'] as [MenuKey, string, string],
         ['employee-360', 'Employee 360°', 'users'] as [MenuKey, string, string],
-        ['employee-add', t('add_employee') || 'Tambah Karyawan', 'plus'] as [MenuKey, string, string],
         ['organization', 'Organisasi', 'org'] as [MenuKey, string, string],
         ['hr-operations', 'HR Operations', 'settings'] as [MenuKey, string, string]
       ]
