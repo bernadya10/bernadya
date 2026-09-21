@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Karyawan } from './types';
 
 type Employee = Karyawan & {
@@ -30,8 +30,8 @@ function barcodePattern(value: string) {
   });
 }
 
-function CardArtwork({ employee, side, companyName, logoUrl }: { employee: Employee; side: 'front' | 'back'; companyName: string; logoUrl: string }) {
-  const photo = employee.foto_url || employee.foto || employee.photo_url || '';
+function CardArtwork({ employee, side, companyName, logoUrl, photoOverride }: { employee: Employee; side: 'front' | 'back'; companyName: string; logoUrl: string; photoOverride?: string }) {
+  const photo = photoOverride || employee.foto_url || employee.foto || employee.photo_url || '';
   const id = safeId(employee);
   const pattern = barcodePattern(id);
   const width = 856, height = 540;
@@ -84,12 +84,36 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
   const [side, setSide] = useState<'front' | 'back'>('front');
   const [query, setQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<string[]>([]);
+  const [photoDataUrl, setPhotoDataUrl] = useState<string>('');
   const cardRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => employees.filter(e => `${e.nama} ${e.id_karyawan || ''} ${e.jabatan || ''}`.toLowerCase().includes(query.toLowerCase())), [employees, query]);
   const employee = employees.find(e => e.id === selectedId) || filtered[0] || employees[0];
 
-  const svg = employee ? CardArtwork({ employee, side, companyName, logoUrl }) : '';
+  useEffect(() => {
+    let cancelled = false;
+    setPhotoDataUrl('');
+    const photo = employee?.foto_url || employee?.foto || employee?.photo_url || '';
+    if (!photo) return;
+    (async () => {
+      try {
+        const response = await fetch(photo, { mode: 'cors', cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (!cancelled && typeof reader.result === 'string') setPhotoDataUrl(reader.result);
+        };
+        reader.readAsDataURL(blob);
+      } catch (error) {
+        console.warn('Gagal mengubah foto karyawan menjadi data URL; memakai URL asli:', error);
+        if (!cancelled) setPhotoDataUrl(photo);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [employee?.id, employee?.foto_url, employee?.foto, employee?.photo_url]);
+
+  const svg = employee ? CardArtwork({ employee, side, companyName, logoUrl, photoOverride: photoDataUrl }) : '';
 
   const downloadSvg = () => {
     if (!employee) return;
@@ -116,7 +140,7 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
     const list = employees.filter(e => ids.includes(e.id));
     if (!list.length) return;
     const win = window.open('', '_blank', 'width=1000,height=800'); if (!win) return;
-    const cards = list.map(e => `<div class="print-card"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(CardArtwork({employee:e,side,companyName,logoUrl}))}"/></div>`).join('');
+    const cards = list.map(e => `<div class="print-card"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(CardArtwork({employee:e,side,companyName,logoUrl,photoOverride: (e.id === employee.id ? photoDataUrl : undefined)}))}"/></div>`).join('');
     win.document.write(`<html><head><title>ID Card ${companyName}</title><style>@page{size:A4 portrait;margin:10mm}body{font-family:Arial;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10mm}.print-card{break-inside:avoid}.print-card img{width:100%;height:auto;display:block}</style></head><body>${cards}</body></html>`);
     win.document.close(); win.focus(); setTimeout(() => win.print(), 350);
   };

@@ -198,13 +198,13 @@ export default function RegistrasiKaryawan({ onBack }: RegistrasiKaryawanProps) 
         const fileExt =
           photoFile.name.split('.').pop()?.toLowerCase() || 'jpg';
 
-        const fileName = `reg-${Date.now()}.${fileExt}`;
+        const fileName = `reg-${crypto.randomUUID()}.${fileExt}`;
         const filePath = `avatars/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('profile-photos')
           .upload(filePath, photoFile, {
-            upsert: true,
+            upsert: false,
             contentType: photoFile.type,
           });
 
