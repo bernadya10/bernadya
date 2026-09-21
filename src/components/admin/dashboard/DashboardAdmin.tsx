@@ -155,6 +155,10 @@ export default function DashboardAdmin() {
   const [toast, setToast] = useState('');
   const [editing, setEditing] = useState<Karyawan | null>(null);
   const [userRole, setUserRole] = useState('');
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileName, setProfileName] = useState('');
+  const [profilePanelOpen, setProfilePanelOpen] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [dbPerms, setDbPerms] = useState<string[]>([]);
   const [sessionChecking, setSessionChecking] = useState(true);
   const [roleOpen, setRoleOpen] = useState(false);
@@ -269,9 +273,10 @@ export default function DashboardAdmin() {
       const { data } = await supabase.auth.getUser();
       if (!active) return;
       if (data.user?.email) {
-        const { data: p } = await supabase.from('hris_users').select('role,status').eq('email', data.user.email).maybeSingle();
+        const { data: p } = await supabase.from('hris_users').select('nama,role,status').eq('email', data.user.email).maybeSingle();
         if (active && p?.status === 'Aktif') {
           setUserRole(p.role || '');
+          setProfileName(p.nama || '');
           const { data: rp } = await supabase.from('hris_role_permissions').select('permission_code').eq('role_name', p.role);
           if (active) { setDbPerms((rp || []).map(x => x.permission_code)); setEmail(data.user.email); setLogged(true); }
         } else if (active) { await supabase.auth.signOut(); setLogged(false); }
@@ -281,7 +286,7 @@ export default function DashboardAdmin() {
     loadSession();
     if (!isSupabaseConfigured) return () => { active = false };
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session) { setLogged(false); setUserRole(''); setDbPerms([]); setSessionChecking(false); }
+      if (event === 'SIGNED_OUT' || !session) { setLogged(false); setUserRole(''); setProfileName(''); setDbPerms([]); setSessionChecking(false); }
     });
     return () => { active = false; listener.subscription.unsubscribe() };
   }, []);
@@ -365,6 +370,39 @@ export default function DashboardAdmin() {
     setLoading(false);
   }
 
+  async function loadProfilePhoto() {
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData.user?.id;
+    if (!uid) return;
+    const { data } = await supabase.storage.from("profile-photos").createSignedUrl(`${uid}/avatar.jpg`, 3600);
+    if (data?.signedUrl) setProfilePhotoUrl(data.signedUrl);
+  }
+
+  async function uploadProfilePhoto(file: File) {
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData.user?.id;
+    if (!uid) { setError("Sesi login tidak ditemukan."); return; }
+    if (!file.type.startsWith("image/")) { setError("File harus berupa gambar."); return; }
+    if (file.size > 5 * 1024 * 1024) { setError("Ukuran foto maksimal 5 MB."); return; }
+    const path = `${uid}/avatar.jpg`;
+    const { error: uploadError } = await supabase.storage.from("profile-photos").upload(path, file, { upsert: true, contentType: file.type });
+    if (uploadError) { setError("Gagal mengunggah foto: " + uploadError.message); return; }
+    await loadProfilePhoto(); setToast("Foto profil berhasil diperbarui.");
+  }
+
+  async function saveProfileName() {
+    const nextName = profileName.trim();
+    if (nextName.length === 0) { setError("Nama profil wajib diisi."); return; }
+    const { data: userData } = await supabase.auth.getUser();
+    const userEmail = userData.user?.email;
+    if (!userEmail) { setError("Sesi login tidak ditemukan."); return; }
+    const { error: profileError } = await supabase.from("hris_users").update({ nama: nextName }).eq("email", userEmail);
+    if (profileError) { setError("Gagal menyimpan nama profil: " + profileError.message); return; }
+    setProfileName(nextName);
+    setProfilePanelOpen(false);
+    setToast("Nama profil berhasil diperbarui.");
+  }
+
   async function login(e: FormEvent) {
     e.preventDefault(); setError('');
     if (!isSupabaseConfigured) { setError('Supabase belum dikonfigurasi. Isi VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY pada environment deployment.'); return }
@@ -372,12 +410,13 @@ export default function DashboardAdmin() {
     const { data, error: e2 } = await signIn(email, pin);
     setLoading(false);
     if (e2 || !data.user) { setError(e2?.message || 'Email atau password tidak valid.'); return; }
-    const { data: profile, error: pe } = await supabase.from('hris_users').select('role,status').ilike('email', data.user.email || '').maybeSingle();
+    const { data: profile, error: pe } = await supabase.from('hris_users').select('nama,role,status').ilike('email', data.user.email || '').maybeSingle();
     if (pe) { await signOut(); setError('Profil akses HR tidak dapat diverifikasi. Coba lagi atau hubungi administrator.'); return; }
     if (!profile || profile.status !== 'Aktif') {
       await signOut(); setError('Akun tidak memiliki akses Dashboard HR.'); return;
     }
     setUserRole(profile.role);
+    setProfileName(profile.nama || '');
     const { data: rp } = await supabase.from('hris_role_permissions').select('permission_code').eq('role_name', profile.role);
     setDbPerms((rp || []).map(x => x.permission_code));
     setLogged(true);
@@ -520,7 +559,41 @@ return (
   <button type="button" className="floating-role" onClick={()=>setRoleOpen(v=>!v)} aria-expanded={roleOpen}><span className="role-shield">♜</span><strong>{userRole || 'User'}</strong><Icon name="chevronDown"/></button>
   {roleOpen && <div className="role-menu"><small>ROLE AKTIF</small>{['Super Admin','Admin','HRD','Payroll','Supervisor','Karyawan'].map(r=><button type="button" key={r} className={r===userRole?'selected':''} onClick={()=>{setRoleOpen(false); if(r!==userRole)setToast(`Role ${r} hanya dapat diubah melalui Role & Permission.`)}}>{r===userRole?'✓':' '} {r}</button>)}</div>}
 </div>
-<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="avatar">HR</div></div></header>
+<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>HR</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);setToast(`Role aktif: ${userRole || "User"}`)}}><span>🛡️</span>Role</button><button type="button" onClick={()=>{setProfileOpen(false);setToast("Pengaturan bahasa akan tersedia di Pengaturan.")}}><span>🌐</span>Bahasa</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("settings")}}><span>⚙️</span>Pengaturan</button><div className="profile-menu-divider"/><button type="button" className="profile-logout" onClick={async()=>{setProfileOpen(false);await signOut();setLogged(false);setEmail("");setUserRole("");setProfileName("");setDbPerms([])}}><span>🚪</span>Logout</button></div>}</div></div></header>
+              {profilePanelOpen && <div className="profile-panel-overlay" onClick={()=>setProfilePanelOpen(false)}>
+                <div className="profile-panel" onClick={e=>e.stopPropagation()}>
+                  <div className="profile-panel-head">
+                    <div>
+                      <h3>Profil Saya</h3>
+                      <p>Kelola informasi profil akun Anda</p>
+                    </div>
+                    <button type="button" className="profile-panel-close" onClick={()=>setProfilePanelOpen(false)}>×</button>
+                  </div>
+                  <div className="profile-panel-body">
+                    <div className="profile-photo-area">
+                      <div className="profile-photo-placeholder">{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div>
+                      <input id="profile-photo-input" type="file" accept="image/png,image/jpeg,image/webp" style={{display:"none"}} onChange={e=>{const file=e.target.files?.[0]; if(file) uploadProfilePhoto(file)}} /><button type="button" className="profile-photo-button" onClick={()=>document.getElementById("profile-photo-input")?.click()}>Ganti Foto</button>
+                    </div>
+                    <label className="profile-field">
+                      <span>Nama</span>
+                      <input value={profileName} onChange={e=>setProfileName(e.target.value)} placeholder="Masukkan nama" />
+                    </label>
+                    <label className="profile-field">
+                      <span>Email</span>
+                      <input value={email} readOnly />
+                    </label>
+                    <label className="profile-field">
+                      <span>Role</span>
+                      <input value={userRole || "User"} readOnly />
+                    </label>
+                  </div>
+                  <div className="profile-panel-footer">
+                    <button type="button" className="profile-btn-secondary" onClick={()=>setProfilePanelOpen(false)}>Batal</button>
+                    <button type="button" className="profile-btn-primary" onClick={saveProfileName}>Simpan</button>
+                  </div>
+                </div>
+              </div>}
+
     <section className="page">{loading&&<div className="loading">Memuat data…</div>}{error&&<div className="alert">{error}</div>}
     {menu==='overview'&&<Overview employees={employees} attendance={attendance} present={present} late={late} payroll={payroll} onNavigate={navigate}/>}
     {menu==='id-card'&&<IDCardModule employees={employees} companyName="Project by Tirta" logoUrl={moonLogo}/> }
