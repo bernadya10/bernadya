@@ -6,8 +6,8 @@ type Employee={id:string;id_karyawan?:string;nama:string;departemen?:string;jaba
 type Row=Record<string,any>;
 const money=(n:number)=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
 function Stat({label,value}:{label:string;value:string|number}){return <div className="stat-card"><span>{label}</span><strong>{value}</strong></div>}
-export default function Employee360({employees}:{employees:Employee[]}){
- const [selected,setSelected]=useState(employees[0]?.id_karyawan||''),[attendance,setAttendance]=useState<Row[]>([]),[leave,setLeave]=useState<Row[]>([]),[overtime,setOvertime]=useState<Row[]>([]),[payroll,setPayroll]=useState<Row[]>([]),[history,setHistory]=useState<Row[]>([]),[docs,setDocs]=useState<Row[]>([]),[tab,setTab]=useState('overview');
+export default function Employee360({employees, initialEmployeeId}:{employees:Employee[];initialEmployeeId?:string}){
+ const [selected,setSelected]=useState(initialEmployeeId||employees[0]?.id_karyawan||''),[attendance,setAttendance]=useState<Row[]>([]),[leave,setLeave]=useState<Row[]>([]),[overtime,setOvertime]=useState<Row[]>([]),[payroll,setPayroll]=useState<Row[]>([]),[history,setHistory]=useState<Row[]>([]),[docs,setDocs]=useState<Row[]>([]),[tab,setTab]=useState('overview');
  const emp=useMemo(()=>employees.find(x=>x.id_karyawan===selected),[employees,selected]);
  useEffect(()=>{if(!selected)return; (async()=>{const [a,l,o,p,h,d]=await Promise.all([
   supabase.from('absensi').select('*').eq('id_karyawan',selected).order('tanggal',{ascending:false}).limit(100),

@@ -92,25 +92,39 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
 
   useEffect(() => {
     let cancelled = false;
-    setPhotoDataUrl('');
-    const photo = employee?.foto_url || employee?.foto || employee?.photo_url || '';
-    if (!photo) return;
-    (async () => {
+
+    const loadPhoto = async () => {
+      const photo = employee?.foto_url || employee?.foto || employee?.photo_url || '';
+
+      if (!photo) {
+        setPhotoDataUrl('');
+        return;
+      }
+
       try {
-        const response = await fetch(photo, { mode: 'cors', cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(photo);
+        if (!response.ok) throw new Error('Foto tidak dapat diambil');
+
         const blob = await response.blob();
+
         const reader = new FileReader();
         reader.onloadend = () => {
-          if (!cancelled && typeof reader.result === 'string') setPhotoDataUrl(reader.result);
+          if (!cancelled && typeof reader.result === 'string') {
+            setPhotoDataUrl(reader.result);
+          }
         };
         reader.readAsDataURL(blob);
       } catch (error) {
-        console.warn('Gagal mengubah foto karyawan menjadi data URL; memakai URL asli:', error);
-        if (!cancelled) setPhotoDataUrl(photo);
+        console.error('Gagal memuat foto ID Card:', error);
+        if (!cancelled) setPhotoDataUrl('');
       }
-    })();
-    return () => { cancelled = true; };
+    };
+
+    loadPhoto();
+
+    return () => {
+      cancelled = true;
+    };
   }, [employee?.id, employee?.foto_url, employee?.foto, employee?.photo_url]);
 
   const svg = employee ? CardArtwork({ employee, side, companyName, logoUrl, photoOverride: photoDataUrl }) : '';
@@ -124,28 +138,200 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
 
   const downloadPng = async () => {
     if (!employee) return;
+
+    const exportSvg = CardArtwork({
+      employee,
+      side,
+      companyName,
+      logoUrl,
+      photoOverride: photoDataUrl
+    });
+
     const img = new Image();
-    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
     img.onload = () => {
-      const canvas = document.createElement('canvas'); canvas.width = 1712; canvas.height = 1080;
-      const ctx = canvas.getContext('2d'); if (!ctx) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = 1712;
+      canvas.height = 1080;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-      canvas.toBlob(blob => { if (!blob) return; const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = `ID-CARD-${safeId(employee)}-${side}.png`; a.click(); URL.revokeObjectURL(u); }, 'image/png');
+
+      canvas.toBlob(blob => {
+        if (!blob) return;
+        const u = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = u;
+        a.download = `ID-CARD-${safeId(employee)}-${side}.png`;
+        a.click();
+        URL.revokeObjectURL(u);
+      }, 'image/png');
     };
-    img.src = url;
+
+    img.onerror = () => {
+      console.error('Gagal merender ID Card menjadi PNG');
+    };
+
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(exportSvg);
   };
 
-  const printCards = (ids: string[]) => {
+  const getPhotoDataUrl = async (photoUrl: string): Promise<string> => {
+    if (!photoUrl) return '';
+
+    try {
+      const response = await fetch(photoUrl);
+      if (!response.ok) throw new Error('Foto tidak dapat diambil');
+
+      const blob = await response.blob();
+
+      return await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            resolve(reader.result);
+          } else {
+            reject(new Error('Gagal mengubah foto menjadi Data URL'));
+          }
+        };
+
+        reader.onerror = () => reject(new Error('Gagal membaca foto'));
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error('Gagal memuat foto untuk Print/PDF:', error);
+      return '';
+    }
+  };
+
+  const printCards = async (ids: string[]) => {
     const list = employees.filter(e => ids.includes(e.id));
     if (!list.length) return;
-    const win = window.open('', '_blank', 'width=1000,height=800'); if (!win) return;
-    const cards = list.map(e => `<div class="print-card"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(CardArtwork({employee:e,side,companyName,logoUrl,photoOverride: (e.id === employee.id ? photoDataUrl : undefined)}))}"/></div>`).join('');
-    win.document.write(`<html><head><title>ID Card ${companyName}</title><style>@page{size:A4 portrait;margin:10mm}body{font-family:Arial;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10mm}.print-card{break-inside:avoid}.print-card img{width:100%;height:auto;display:block}</style></head><body>${cards}</body></html>`);
-    win.document.close(); win.focus(); setTimeout(() => win.print(), 350);
+
+    const win = window.open('', '_blank', 'width=1000,height=800');
+    if (!win) return;
+
+    win.document.write(`
+      <html>
+        <head>
+          <title>ID Card ${companyName}</title>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 0;
+            }
+
+            * {
+              box-sizing: border-box;
+            }
+
+            html,
+            body {
+              margin: 0;
+              padding: 0;
+              background: white;
+            }
+
+            .print-card {
+              width: 210mm;
+              height: 297mm;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              break-after: page;
+              page-break-after: always;
+              overflow: hidden;
+            }
+
+            .print-card:last-child {
+              break-after: auto;
+              page-break-after: auto;
+            }
+
+            .print-card img {
+              display: block;
+              width: 85.6mm;
+              height: 54mm;
+              object-fit: contain;
+            }
+          </style>
+        </head>
+        <body>
+    `);
+
+    for (const employeeItem of list) {
+      const photoUrl =
+        employeeItem.foto_url ||
+        employeeItem.foto ||
+        employeeItem.photo_url ||
+        '';
+
+      const employeePhotoDataUrl =
+        employeeItem.id === employee?.id && photoDataUrl
+          ? photoDataUrl
+          : await getPhotoDataUrl(photoUrl);
+
+      const frontSvg = CardArtwork({
+        employee: employeeItem,
+        side: 'front',
+        companyName,
+        logoUrl,
+        photoOverride: employeePhotoDataUrl
+      });
+
+      const backSvg = CardArtwork({
+        employee: employeeItem,
+        side: 'back',
+        companyName,
+        logoUrl,
+        photoOverride: employeePhotoDataUrl
+      });
+
+      const frontSrc =
+        'data:image/svg+xml;charset=utf-8,' +
+        encodeURIComponent(frontSvg);
+
+      const backSrc =
+        'data:image/svg+xml;charset=utf-8,' +
+        encodeURIComponent(backSvg);
+
+      win.document.write(`
+        <div class="print-card">
+          <img src="${frontSrc}" alt="ID Card Depan" />
+        </div>
+
+        <div class="print-card">
+          <img src="${backSrc}" alt="ID Card Belakang" />
+        </div>
+      `);
+    }
+
+    win.document.write(`
+        </body>
+      </html>
+    `);
+
+    win.document.close();
+
+    setTimeout(() => {
+      win.focus();
+      win.print();
+    }, 700);
   };
 
-  const printCurrent = () => employee && printCards([employee.id]);
+  const printCurrent = () => {
+    if (employee) {
+      void printCards([employee.id]);
+    }
+  };
+
+  const downloadPdf = () => {
+    if (employee) {
+      void printCards([employee.id]);
+    }
+  };
+
   const toggleBatch = (id: string) => setSelectedBatch(v => v.includes(id) ? v.filter(x => x !== id) : [...v, id]);
 
   if (!employee) return <div className="panel"><p>Belum ada data karyawan untuk dibuatkan ID Card.</p></div>;
@@ -160,7 +346,7 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
     <div className="id-card-layout">
       <div className="id-card-preview-panel panel" ref={cardRef}>
         <div className="id-card-preview" dangerouslySetInnerHTML={{ __html: svg }} />
-        <div className="id-card-actions"><button className="secondary" onClick={downloadPng}>⬇️ Download PNG</button><button className="secondary" onClick={downloadSvg}>⬇️ Download SVG</button><button className="primary" onClick={printCurrent}>🖨️ Print / PDF</button></div>
+        <div className="id-card-actions"><button className="secondary" onClick={downloadPng}>⬇️ Download PNG</button><button className="secondary" onClick={downloadSvg}>⬇️ Download SVG</button><button className="primary" onClick={downloadPdf}>⬇️ Download PDF — Depan + Belakang</button><button className="primary" onClick={printCurrent}>🖨️ Print — Depan + Belakang</button></div>
         <small className="id-card-note">Untuk PDF, pilih printer <b>Save as PDF</b> pada dialog print browser. Tidak perlu mengubah data database.</small>
       </div>
       <div className="panel id-card-list"><div className="id-list-head"><div><b>Pilih untuk Batch Print</b><small>{selectedBatch.length} karyawan dipilih</small></div><button className="link-btn" onClick={() => setSelectedBatch(filtered.map(e => e.id))}>Pilih Semua</button></div>{filtered.map(e => <label className="id-employee-row" key={e.id}><input type="checkbox" checked={selectedBatch.includes(e.id)} onChange={() => toggleBatch(e.id)} /><span className="id-avatar">{initials(e.nama)}</span><span><b>{e.nama}</b><small>{safeId(e)} · {e.jabatan || '-'}</small></span></label>)}</div>

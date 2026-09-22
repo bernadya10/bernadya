@@ -16,6 +16,7 @@ import SecurityCenterV21 from '../security/SecurityCenterV21';
 import PayrollProductionV22 from '../payroll/PayrollProductionV22';
 import RecruitmentATSv25 from '../recruitment/RecruitmentATSv25';
 import EnterpriseRoadmapV26V35 from '../enterprise/EnterpriseRoadmapV26V35';
+import ProfessionalSuite from '../enterprise/ProfessionalSuite';
 import moonLogo from '../../../assets/moon-logo.svg';
 import IDCardModule from '../employee/IDCardModule';
 import '../../../styles/admin/id-card.css';
@@ -295,7 +296,31 @@ export default function DashboardAdmin() {
   }, []);
 
   useEffect(() => { if (logged) refresh() }, [logged]);
-  useEffect(() => { const read = () => { const candidate = location.hash.replace('#/', '') as MenuKey; if (candidate && menuGroups.flatMap(g => g.items).some(x => x[0] === candidate) && menuPermissionForRole(candidate, userRole, dbPerms)) setMenu(candidate) }; read(); window.addEventListener('hashchange', read); return () => window.removeEventListener('hashchange', read) }, [userRole, dbPerms, menuGroups]);
+  const [employee360Id, setEmployee360Id] = useState('');
+
+  useEffect(() => {
+    const read = () => {
+      const raw = location.hash.replace(/^#\//, '');
+      const parts = raw.split('/').filter(Boolean);
+      const candidate = parts[0] as MenuKey;
+      const employeeId = candidate === 'employee-360' ? (parts[1] || '') : '';
+
+      setEmployee360Id(employeeId);
+
+      if (
+        candidate &&
+        menuGroups.flatMap(g => g.items).some(x => x[0] === candidate) &&
+        menuPermissionForRole(candidate, userRole, dbPerms)
+      ) {
+        setMenu(candidate);
+      }
+    };
+
+    read();
+    window.addEventListener('hashchange', read);
+
+    return () => window.removeEventListener('hashchange', read);
+  }, [userRole, dbPerms, menuGroups]);
   
   const navigate = (next: MenuKey) => { setMenu(next); location.hash = `/${next}`; if (window.innerWidth < 900) setSidebar(false) };
 
@@ -605,16 +630,20 @@ return (
 
     <section className="page">{loading&&<div className="loading">Memuat data…</div>}{error&&<div className="alert">{error}</div>}
     {menu==='overview'&&<Overview employees={employees} attendance={attendance} present={present} late={late} payroll={payroll} onNavigate={navigate} profileName={profileName}/>}
+    {menu==='professional-suite'&&<ProfessionalSuite employees={employees} attendance={attendance} onNavigate={navigate}/>}
     {menu==='id-card'&&<IDCardModule employees={employees} companyName="Project by Tirta" logoUrl={moonLogo}/> }
     {menu==='employees'&&<Employees data={filtered} onDelete={removeEmployee} onEdit={setEditing} onExport={(columns, format)=>format==='excel' ? exportExcel(employees as any,'database-karyawan.xls',columns) : exportCsv(employees as any,'database-karyawan.csv',columns)} onAdd={()=>navigate('employee-add')} onConfirmEmail={confirmEmployeeEmail}/> }
-    {menu==='employee-360'&&<Employee360 employees={employees}/>}
+    {menu==='employee-360'&&<Employee360 employees={employees} initialEmployeeId={employee360Id}/>}
     {menu==='employee-add'&&<AddEmployee refresh={refresh} onDone={()=>navigate('employees')}/>} {menu==='hr-operations'&&<HRISCore employees={employees}/>} {menu==='production-hr'&&<ProductionHR employees={employees}/>} 
     {menu==='organization'&&<MasterData initialTab="cabang"/>}
     {['attendance','attendance-today','late','leave','overtime','selfie'].includes(menu)&&<AttendanceModule type={menu} data={filteredA} onRefresh={refresh} onExport={()=>exportCsv(attendance as any,'laporan-absensi.csv')}/>}
     {menu==='schedule'&&<MasterData initialTab="jadwal"/>}{menu==='shift'&&<MasterData initialTab="shift"/>}
     {menu==='holiday'&&<HolidayModule/>}
     {['leave-request','leave-balance'].includes(menu)&&<LeaveModule initial={menu}/>}
-    {['payroll','payroll-components','payroll-overtime','payslip'].includes(menu)&&<PayrollEnterprise employees={employees}/>}
+    {menu==='payroll'&&<PayrollEnterprise employees={employees} view="payroll"/>}
+    {menu==='payroll-components'&&<PayrollEnterprise employees={employees} view="components"/>}
+    {menu==='payroll-overtime'&&<PayrollEnterprise employees={employees} view="overtime"/>}
+    {menu==='payslip'&&<PayrollEnterprise employees={employees} view="payslip"/>}
     {menu==='payroll-engine'&&<PayrollEngineV9/>}{menu==='payroll-production-v22'&&<PayrollProductionV22/>}{menu==='payroll-indonesia-v23'&&<PayrollIndonesiaV23/>}
     {['performance','kpi'].includes(menu)&&<TalentModule initial={menu} employees={employees}/>} {menu==='recruitment-v25'&&<RecruitmentATSv25/>} {menu.startsWith('enterprise-v')&&menu!=='enterprise-v20'&&<EnterpriseRoadmapV26V35 version={menu.replace('enterprise-','') as any}/>} {['recruitment','candidates'].includes(menu)&&<RecruitmentEnterprise/>}
     {menu==='reports'&&<Reports employees={employees} attendance={attendance} onExport={exportCsv}/>}
