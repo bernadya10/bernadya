@@ -25,8 +25,8 @@ export default function AttendanceShiftV24(){
 
   return <section className="module-page">
     <div className="module-header">
-      <div><div className="eyebrow">ATTENDANCE • SHIFT</div><h1>Attendance & Shift Engine</h1><p>Master shift, overnight schedule, tolerance, holiday calendar, calculation snapshot dan adjustment workflow.</p></div>
-      <button className="btn-primary" onClick={load}>Refresh</button>
+      <div><div className="eyebrow">ABSENSI • SHIFT</div><h1>Mesin Absensi & Shift</h1><p>Master shift, overnight schedule, tolerance, holiday calendar, calculation snapshot dan adjustment workflow.</p></div>
+      <button className="btn-primary" onClick={load}>Muat Ulang</button>
     </div>
     {message&&<div className="alert">{message}</div>}
     <div className="table-card">

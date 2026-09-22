@@ -5,7 +5,7 @@ import { validateAnnouncementDraft } from './service';
 export default function AdminAnnouncementManager({
   announcements,
   onCreate,
-  onPublish,
+  onTerbitkan,
   onArchive,
 }: {
   announcements: Announcement[];
@@ -13,7 +13,7 @@ export default function AdminAnnouncementManager({
     title: string; body: string; category: AnnouncementCategory;
     priority: AnnouncementPriority; audience: AnnouncementAudience; pinned: boolean;
   }) => Promise<void> | void;
-  onPublish?: (id: string) => void;
+  onTerbitkan?: (id: string) => void;
   onArchive?: (id: string) => void;
 }) {
   const [title, setTitle] = useState('');
@@ -44,12 +44,12 @@ export default function AdminAnnouncementManager({
         <select value={category} onChange={e => setCategory(e.target.value as AnnouncementCategory)}>
           <option value="general">Umum</option><option value="hr">HR</option>
           <option value="attendance">Kehadiran</option><option value="holiday">Libur</option>
-          <option value="important">Penting</option><option value="urgent">Urgent</option>
+          <option value="important">Penting</option><option value="urgent">Mendesak</option>
         </select>
       </label>
       <label>Prioritas
         <select value={priority} onChange={e => setPriority(e.target.value as AnnouncementPriority)}>
-          <option value="normal">Normal</option><option value="important">Penting</option><option value="urgent">Urgent</option>
+          <option value="normal">Normal</option><option value="important">Penting</option><option value="urgent">Mendesak</option>
         </select>
       </label>
       <label>Isi <textarea maxLength={20000} rows={10} value={body} onChange={e => setBody(e.target.value)} /></label>
@@ -61,7 +61,7 @@ export default function AdminAnnouncementManager({
       {announcements.map(a => (
         <article key={a.id}>
           <strong>{a.title}</strong> · {a.status}
-          {a.status === 'draft' && <button type="button" onClick={() => onPublish?.(a.id)}>Publish</button>}
+          {a.status === 'draft' && <button type="button" onClick={() => onTerbitkan?.(a.id)}>Terbitkan</button>}
           {a.status !== 'archived' && <button type="button" onClick={() => onArchive?.(a.id)}>Arsipkan</button>}
           {a.recipientCount !== undefined && <small> · Dibaca {a.readCount ?? 0}/{a.recipientCount}</small>}
         </article>

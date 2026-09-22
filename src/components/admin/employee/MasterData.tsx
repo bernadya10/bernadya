@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '../../../lib/supabase/client';
+import { useTranslation } from '../../../locales/LanguageContext';
 import AdminIcon from '../common/AdminIcon';
 
 type Tab = 'cabang' | 'departemen' | 'jabatan' | 'shift' | 'jadwal';
@@ -201,6 +202,7 @@ function TabButton({
 ========================================================= */
 
 function CabangModule() {
+  const { t } = useTranslation();
   const [data, setData] = useState<Cabang[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -254,7 +256,7 @@ function CabangModule() {
     e.preventDefault();
 
     if (!form.nama.trim()) {
-      alert('Nama cabang wajib diisi.');
+      alert(t('branch_name_required'));
       return;
     }
 
@@ -430,6 +432,7 @@ function CabangModule() {
 ========================================================= */
 
 function DepartemenModule() {
+  const { t } = useTranslation();
   const [data, setData] = useState<Departemen[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -482,7 +485,7 @@ function DepartemenModule() {
     e.preventDefault();
 
     if (!form.nama.trim()) {
-      alert('Nama departemen wajib diisi.');
+      alert(t('department_name_required'));
       return;
     }
 
@@ -650,6 +653,7 @@ function DepartemenModule() {
 ========================================================= */
 
 function JabatanModule() {
+  const { t } = useTranslation();
   const [data, setData] = useState<Jabatan[]>([]);
   const [departemen, setDepartemen] = useState<Departemen[]>([]);
   const [loading, setLoading] = useState(true);
@@ -715,7 +719,7 @@ function JabatanModule() {
     e.preventDefault();
 
     if (!form.nama.trim()) {
-      alert('Nama jabatan wajib diisi.');
+      alert(t('position_name_required'));
       return;
     }
 
@@ -897,6 +901,7 @@ function JabatanModule() {
 ========================================================= */
 
 function ShiftModule() {
+  const { t } = useTranslation();
   const [data, setData] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -955,7 +960,7 @@ function ShiftModule() {
     e.preventDefault();
 
     if (!form.nama.trim()) {
-      alert('Nama shift wajib diisi.');
+      alert(t('shift_name_required'));
       return;
     }
 
@@ -1172,6 +1177,7 @@ function ShiftModule() {
 ========================================================= */
 
 function JadwalModule() {
+  const { t } = useTranslation();
   const [data, setData] = useState<Jadwal[]>([]);
   const [employees, setEmployees] = useState<Karyawan[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
@@ -1266,17 +1272,17 @@ function JadwalModule() {
     e.preventDefault();
 
     if (!form.id_karyawan) {
-      alert('Karyawan wajib dipilih.');
+      alert(t('employee_required'));
       return;
     }
 
     if (!form.tanggal) {
-      alert('Tanggal wajib diisi.');
+      alert(t('date_required'));
       return;
     }
 
     if (!form.shift_id) {
-      alert('Shift wajib dipilih.');
+      alert(t('shift_required'));
       return;
     }
 

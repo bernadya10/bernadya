@@ -62,13 +62,13 @@ function CardArtwork({ employee, side, companyName, logoUrl, photoOverride }: { 
     <rect width="856" height="126" rx="34" fill="url(#g)"/><rect y="92" width="856" height="34" fill="url(#g)"/>
     <image href="${logoUrl}" x="54" y="30" width="66" height="66" preserveAspectRatio="xMidYMid meet"/>
     <text x="140" y="64" font-family="Arial" font-size="28" font-weight="700" fill="#fff">${companyName}</text>
-    <text x="140" y="91" font-family="Arial" font-size="14" fill="#d6ae58">EMPLOYEE IDENTIFICATION CARD</text>
+    <text x="140" y="91" font-family="Arial" font-size="14" fill="#d6ae58">KARTU IDENTITAS KARYAWAN</text>
     ${photoSvg}
     <text x="292" y="171" font-family="Arial" font-size="15" font-weight="700" fill="#667085">NAMA LENGKAP</text>
     <text x="292" y="205" font-family="Arial" font-size="27" font-weight="700" fill="#101a33">${employee.nama || '-'}</text>
     <text x="292" y="248" font-family="Arial" font-size="15" font-weight="700" fill="#667085">JABATAN</text>
     <text x="292" y="280" font-family="Arial" font-size="20" fill="#344054">${employee.jabatan || '-'}</text>
-    <text x="292" y="324" font-family="Arial" font-size="15" font-weight="700" fill="#667085">EMPLOYEE ID</text>
+    <text x="292" y="324" font-family="Arial" font-size="15" font-weight="700" fill="#667085">ID KARYAWAN</text>
     <text x="292" y="356" font-family="Arial" font-size="22" font-weight="700" fill="#101a33">${id}</text>
     <text x="292" y="400" font-family="Arial" font-size="15" font-weight="700" fill="#667085">DEPARTEMEN</text>
     <text x="292" y="430" font-family="Arial" font-size="18" fill="#344054">${employee.departemen || '-'}</text>
@@ -129,14 +129,14 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
 
   const svg = employee ? CardArtwork({ employee, side, companyName, logoUrl, photoOverride: photoDataUrl }) : '';
 
-  const downloadSvg = () => {
+  const unduhSvg = () => {
     if (!employee) return;
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a');
     a.href = url; a.download = `ID-CARD-${safeId(employee)}-${side}.svg`; a.click(); URL.revokeObjectURL(url);
   };
 
-  const downloadPng = async () => {
+  const unduhPng = async () => {
     if (!employee) return;
 
     const exportSvg = CardArtwork({
@@ -200,12 +200,12 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
         reader.readAsDataURL(blob);
       });
     } catch (error) {
-      console.error('Gagal memuat foto untuk Print/PDF:', error);
+      console.error('Gagal memuat foto untuk Cetak/PDF:', error);
       return '';
     }
   };
 
-  const printCards = async (ids: string[]) => {
+  const cetakCards = async (ids: string[]) => {
     const list = employees.filter(e => ids.includes(e.id));
     if (!list.length) return;
 
@@ -233,7 +233,7 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
               background: white;
             }
 
-            .print-card {
+            .cetak-card {
               width: 210mm;
               height: 297mm;
               display: flex;
@@ -244,12 +244,12 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
               overflow: hidden;
             }
 
-            .print-card:last-child {
+            .cetak-card:last-child {
               break-after: auto;
               page-break-after: auto;
             }
 
-            .print-card img {
+            .cetak-card img {
               display: block;
               width: 85.6mm;
               height: 54mm;
@@ -297,11 +297,11 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
         encodeURIComponent(backSvg);
 
       win.document.write(`
-        <div class="print-card">
+        <div class="cetak-card">
           <img src="${frontSrc}" alt="ID Card Depan" />
         </div>
 
-        <div class="print-card">
+        <div class="cetak-card">
           <img src="${backSrc}" alt="ID Card Belakang" />
         </div>
       `);
@@ -320,15 +320,15 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
     }, 700);
   };
 
-  const printCurrent = () => {
+  const cetakCurrent = () => {
     if (employee) {
-      void printCards([employee.id]);
+      void cetakCards([employee.id]);
     }
   };
 
-  const downloadPdf = () => {
+  const unduhPdf = () => {
     if (employee) {
-      void printCards([employee.id]);
+      void cetakCards([employee.id]);
     }
   };
 
@@ -337,19 +337,19 @@ export default function IDCardModule({ employees, companyName, logoUrl }: Props)
   if (!employee) return <div className="panel"><p>Belum ada data karyawan untuk dibuatkan ID Card.</p></div>;
 
   return <div className="id-card-module">
-    <div className="page-heading"><div><h1>ID Card Karyawan</h1><p>Buat, preview, download, dan print kartu identitas langsung dari database karyawan.</p></div><button className="primary" onClick={() => printCards(selectedBatch.length ? selectedBatch : [employee.id])}>🖨️ Print {selectedBatch.length ? `${selectedBatch.length} Kartu` : 'Kartu'}</button></div>
+    <div className="page-heading"><div><h1>ID Card Karyawan</h1><p>Buat, pratinjau, unduh, dan cetak kartu identitas langsung dari database karyawan.</p></div><button className="primary" onClick={() => cetakCards(selectedBatch.length ? selectedBatch : [employee.id])}>🖨️ Cetak {selectedBatch.length ? `${selectedBatch.length} Kartu` : 'Kartu'}</button></div>
     <div className="id-card-toolbar">
       <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cari nama / ID karyawan..." />
       <select value={selectedId} onChange={e => setSelectedId(e.target.value)}>{filtered.map(e => <option key={e.id} value={e.id}>{e.nama} — {safeId(e)}</option>)}</select>
       <div className="side-switch"><button className={side === 'front' ? 'active' : ''} onClick={() => setSide('front')}>Depan</button><button className={side === 'back' ? 'active' : ''} onClick={() => setSide('back')}>Belakang</button></div>
     </div>
     <div className="id-card-layout">
-      <div className="id-card-preview-panel panel" ref={cardRef}>
-        <div className="id-card-preview" dangerouslySetInnerHTML={{ __html: svg }} />
-        <div className="id-card-actions"><button className="secondary" onClick={downloadPng}>⬇️ Download PNG</button><button className="secondary" onClick={downloadSvg}>⬇️ Download SVG</button><button className="primary" onClick={downloadPdf}>⬇️ Download PDF — Depan + Belakang</button><button className="primary" onClick={printCurrent}>🖨️ Print — Depan + Belakang</button></div>
-        <small className="id-card-note">Untuk PDF, pilih printer <b>Save as PDF</b> pada dialog print browser. Tidak perlu mengubah data database.</small>
+      <div className="id-card-pratinjau-panel panel" ref={cardRef}>
+        <div className="id-card-pratinjau" dangerouslySetInnerHTML={{ __html: svg }} />
+        <div className="id-card-actions"><button className="secondary" onClick={unduhPng}>⬇️ Download PNG</button><button className="secondary" onClick={unduhSvg}>⬇️ Download SVG</button><button className="primary" onClick={unduhPdf}>⬇️ Download PDF — Depan + Belakang</button><button className="primary" onClick={cetakCurrent}>🖨️ Cetak — Depan + Belakang</button></div>
+        <small className="id-card-note">Untuk PDF, pilih cetaker <b>Simpan sebagai PDF</b> pada dialog cetak browser. Tidak perlu mengubah data database.</small>
       </div>
-      <div className="panel id-card-list"><div className="id-list-head"><div><b>Pilih untuk Batch Print</b><small>{selectedBatch.length} karyawan dipilih</small></div><button className="link-btn" onClick={() => setSelectedBatch(filtered.map(e => e.id))}>Pilih Semua</button></div>{filtered.map(e => <label className="id-employee-row" key={e.id}><input type="checkbox" checked={selectedBatch.includes(e.id)} onChange={() => toggleBatch(e.id)} /><span className="id-avatar">{initials(e.nama)}</span><span><b>{e.nama}</b><small>{safeId(e)} · {e.jabatan || '-'}</small></span></label>)}</div>
+      <div className="panel id-card-list"><div className="id-list-head"><div><b>Pilih untuk Batch Cetak</b><small>{selectedBatch.length} karyawan dipilih</small></div><button className="link-btn" onClick={() => setSelectedBatch(filtered.map(e => e.id))}>Pilih Semua</button></div>{filtered.map(e => <label className="id-employee-row" key={e.id}><input type="checkbox" checked={selectedBatch.includes(e.id)} onChange={() => toggleBatch(e.id)} /><span className="id-avatar">{initials(e.nama)}</span><span><b>{e.nama}</b><small>{safeId(e)} · {e.jabatan || '-'}</small></span></label>)}</div>
     </div>
   </div>;
 }

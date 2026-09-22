@@ -172,14 +172,14 @@ export default function DashboardAdmin() {
     {
       title: 'UTAMA',
       items: [
-        ['overview', t('dashboard') || 'Overview', 'home'] as [MenuKey, string, string],
+        ['overview', t('dashboard') || 'Dashboard', 'home'] as [MenuKey, string, string],
         ['professional-suite', 'Professional Suite', 'kpi'] as [MenuKey, string, string]
       ]
     },
     {
       title: 'PEOPLE',
       items: [
-        ['employees', t('employees') || t('employees'), 'users'] as [MenuKey, string, string],
+        ['employees', t('employees') || 'Semua Karyawan', 'users'] as [MenuKey, string, string],
         ['id-card', 'ID Card', 'card'] as [MenuKey, string, string],
         ['employee-360', 'Employee 360°', 'users'] as [MenuKey, string, string],
         ['organization', 'Organisasi', 'org'] as [MenuKey, string, string],
@@ -187,7 +187,7 @@ export default function DashboardAdmin() {
       ]
     },
     {
-      title: t('attendance'),
+      title: t('attendance') || 'ABSENSI',
       items: [
         ['attendance', t('attendance_summary'), 'clock'] as [MenuKey, string, string],
         ['attendance-today', t('attendance_today'), 'check'] as [MenuKey, string, string],
@@ -198,54 +198,34 @@ export default function DashboardAdmin() {
       ]
     },
     {
-      title: t('payroll'),
+      title: t('payroll') || 'PAYROLL',
       items: [
         ['payroll', t('monthly_payroll'), 'payroll'] as [MenuKey, string, string],
-        ['production-hr', t('hr_transaction_center'), 'settings'] as [MenuKey, string, string],
-        ['payroll-engine', t('payroll_calc') || 'Payroll Calculation', 'payroll'] as [MenuKey, string, string],
-        ['payroll-production-v22', t('payroll_control') || 'Payroll Control', 'payroll'] as [MenuKey, string, string],
+        ['production-hr', t('hr_transaction_center') || 'Pusat Transaksi HR', 'settings'] as [MenuKey, string, string],
+        ['payroll-production-v22', t('payroll_control') || 'Kontrol Payroll', 'payroll'] as [MenuKey, string, string],
         ['payroll-components', t('salary_components'), 'components'] as [MenuKey, string, string],
         ['payroll-overtime', t('overtime_payroll'), 'arrow'] as [MenuKey, string, string],
         ['payslip', t('payslip'), 'calendar'] as [MenuKey, string, string]
       ]
     },
     {
-      title: t('talent'),
+      title: t('talent') || 'TALENTA',
       items: [
         ['performance', t('performance'), 'arrow'] as [MenuKey, string, string],
         ['kpi', t('kpi_target'), 'kpi'] as [MenuKey, string, string],
-        ['recruitment-v25', t('recruitment_ats'), 'recruitment'] as [MenuKey, string, string],
-        ['recruitment', t('recruitment_legacy'), 'recruitment'] as [MenuKey, string, string],
+        ['recruitment-v25', t('recruitment_ats') || 'Rekrutmen', 'recruitment'] as [MenuKey, string, string],
         ['candidates', t('candidates'), 'users'] as [MenuKey, string, string]
       ]
     },
     {
-      title: t('enterprise_suite'),
-      items: [
-        ['enterprise-v26', t('documents_compliance'), 'request'] as [MenuKey, string, string],
-        ['enterprise-v27', t('performance_kpi'), 'kpi'] as [MenuKey, string, string],
-        ['enterprise-v28', t('hr_analytics'), 'kpi'] as [MenuKey, string, string],
-        ['enterprise-v29', t('hr_inbox'), 'bell'] as [MenuKey, string, string],
-        ['enterprise-v30', t('ess_enterprise'), 'users'] as [MenuKey, string, string],
-        ['enterprise-v31', t('qa_testing'), 'check'] as [MenuKey, string, string],
-        ['enterprise-v32', t('production_optimization'), 'settings'] as [MenuKey, string, string],
-        ['enterprise-v33', 'Multi-Company', 'org'] as [MenuKey, string, string],
-        ['enterprise-v34', 'API & Integrations', 'settings'] as [MenuKey, string, string],
-        ['enterprise-v35', 'AI HR & Automation', 'kpi'] as [MenuKey, string, string]
-      ]
-    },
-    {
-      title: t('reporting'),
+      title: t('reporting') || 'REPORTING',
       items: [
         ['reports', t('reports'), 'report'] as [MenuKey, string, string]
       ]
     },
     {
-      title: t('system'),
+      title: t('system') || 'SYSTEM',
       items: [
-        ['enterprise-v20', 'Enterprise Command Center', 'org'] as [MenuKey, string, string],
-        ['payroll-indonesia-v23', 'Payroll Indonesia Compliance', 'payroll'] as [MenuKey, string, string],
-        ['security-v21', 'Security Center', 'health'] as [MenuKey, string, string],
         ['approvals', t('approvals'), 'check'] as [MenuKey, string, string],
         ['notifications', t('notifications'), 'bell'] as [MenuKey, string, string],
         ['system-health', t('system_health'), 'health'] as [MenuKey, string, string],
@@ -415,7 +395,7 @@ export default function DashboardAdmin() {
     const path = `${uid}/avatar.jpg`;
     const { error: uploadError } = await supabase.storage.from("profile-photos").upload(path, file, { upsert: true, contentType: file.type });
     if (uploadError) { setError("Gagal mengunggah foto: " + uploadError.message); return; }
-    await loadProfilePhoto(); setToast("Foto profil berhasil diperbarui.");
+    await loadProfilePhoto(); setToast(t("profile_photo_updated"));
   }
 
   async function saveProfileName() {
@@ -428,7 +408,7 @@ export default function DashboardAdmin() {
     if (profileError) { setError("Gagal menyimpan nama profil: " + profileError.message); return; }
     setProfileName(nextName);
     setProfilePanelOpen(false);
-    setToast("Nama profil berhasil diperbarui.");
+    setToast(t("profile_name_updated"));
   }
 
   async function login(e: FormEvent) {
@@ -454,7 +434,7 @@ export default function DashboardAdmin() {
     if (!menuPermissionForRole('employees', userRole, dbPerms) || !canDelete(dbPerms, 'people', userRole)) { setError('Anda tidak memiliki permission people.delete.'); return }
     if (!confirm(`Hapus ${k.nama}?`)) return;
     const { error: e } = await supabase.from('karyawan').delete().eq('id', k.id);
-    if (e) setError(e.message); else { setToast('Karyawan dihapus.'); refresh() }
+    if (e) setError(e.message); else { setToast(t("employee_deleted")); refresh() }
   }
 
   async function saveEdit(payload: Record<string, unknown>) {
@@ -468,7 +448,7 @@ export default function DashboardAdmin() {
       payload.id_karyawan = nextId;
     }
     const { error: e } = await supabase.from('karyawan').update(payload).eq('id', editing.id);
-    if (e) setError(e.message); else { setEditing(null); setToast('Data karyawan tersimpan.'); refresh() }
+    if (e) setError(e.message); else { setEditing(null); setToast(t("employee_saved")); refresh() }
   }
 
   const filtered = useMemo(() => employees.filter(k => `${k.nama} ${k.id_karyawan || ''} ${k.jabatan || ''} ${k.departemen || ''}`.toLowerCase().includes(search.toLowerCase())), [employees, search]);
@@ -480,7 +460,7 @@ export default function DashboardAdmin() {
   const activeLabel = menuGroups.flatMap(g => g.items).find((x) => x[0] === menu)?.[1] || 'Overview';
   
   const exportCsv = (rows: Record<string, unknown>[], filename: string, columns?: string[]) => {
-    if (!rows.length) { setToast('Tidak ada data untuk diekspor.'); return; }
+    if (!rows.length) { setToast(t("no_data_export")); return; }
     const keys = columns?.length ? columns : Object.keys(rows[0]);
     const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
     const csv = [keys.join(';'), ...rows.map(r => keys.map(k => esc(r[k])).join(';'))].join('\n');
@@ -492,13 +472,13 @@ export default function DashboardAdmin() {
   };
 
   const exportExcel = (rows: Record<string, unknown>[], filename: string, columns: string[]) => {
-    if (!rows.length) { setToast('Tidak ada data untuk diekspor.'); return; }
+    if (!rows.length) { setToast(t("no_data_export")); return; }
     const escHtml = (v: unknown) => String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     const html = `<html><head><meta charset="utf-8"></head><body><table><thead><tr>${columns.map(k=>`<th>${escHtml(fieldLabel(k))}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${columns.map(k=>`<td>${escHtml(r[k])}</td>`).join('')}</tr>`).join('')}</tbody></table></body></html>`;
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([html], { type: 'application/vnd.ms-excel' }));
     a.download = filename; a.click(); URL.revokeObjectURL(a.href);
-    setToast('File Excel kompatibel berhasil dibuat.');
+    setToast(t("excel_created"));
   };
 
   if (sessionChecking) return <div className="login-wrap"><div className="login-card"><div className="loading">Memeriksa sesi keamanan...</div></div></div>;
@@ -584,7 +564,7 @@ return (
 <button className="icon-btn" aria-label="Buka menu" onClick={()=>setSidebar(v=>!v)}><Icon name="menu"/></button>
 <div className="crumb"><span>Project by Tirta</span><b>/</b>{activeLabel}</div>
   {roleOpen && <div className="role-menu"><small>ROLE AKTIF</small>{['Super Admin','Admin','HRD','Payroll','Supervisor','Karyawan'].map(r=><button type="button" key={r} className={r===userRole?'selected':''} onClick={()=>{setRoleOpen(false); if(r!==userRole)setToast(`Role ${r} hanya dapat diubah melalui Role & Permission.`)}}>{r===userRole?'✓':' '} {r}</button>)}</div>}
-<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "User"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("roles")}}><span>🛡️</span>Role</button><div className="profile-language">
+<div className="top-actions"><div className="search-global"><span><Icon name="search"/></span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari data..."/></div><button className="icon-btn" aria-label="Muat ulang" onClick={()=>refresh()}><Icon name="refresh"/></button><div className="profile-trigger-wrap"><button type="button" className="avatar avatar-button" aria-label="Buka profil" aria-expanded={profileOpen} onClick={()=>setProfileOpen(v=>!v)}>{profilePhotoUrl ? <img src={profilePhotoUrl} alt="Foto profil" /> : (profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</button>{profileOpen && <div className="profile-menu"><div className="profile-menu-header"><div className="profile-avatar-large">{(profileName || "HR").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}</div><div><strong>{profileName || email || "Pengguna"}</strong><small>{userRole || "Pengguna"}</small></div></div><div className="profile-menu-divider"/><button type="button" onClick={()=>{setProfileOpen(false);setProfilePanelOpen(true)}}><span>👤</span>Profil</button><button type="button" onClick={()=>{setProfileOpen(false);navigate("roles")}}><span>🛡️</span>Role</button><div className="profile-language">
   <button type="button" onClick={()=>setLanguageOpen(v=>!v)}><span>🌐</span>Bahasa <small>{lang.toUpperCase()} ▾</small></button>
   {languageOpen && <div className="profile-language-options">
     {[['id','Indonesia'],['en','English'],['ja','日本語'],['ko','한국어'],['zh','中文']].map(([code,name])=>
@@ -618,7 +598,7 @@ return (
                     </label>
                     <label className="profile-field">
                       <span>Role</span>
-                      <input value={userRole || "User"} readOnly />
+                      <input value={userRole || "Pengguna"} readOnly />
                     </label>
                   </div>
                   <div className="profile-panel-footer">
@@ -657,7 +637,7 @@ return (
 };
 
 function Login(p:{email:string;pin:string;setEmail:(v:string)=>void;setPin:(v:string)=>void;onSubmit:(e:FormEvent)=>void;error:string;loading:boolean}){
- return <div className="login-wrap"><div className="login-card"><div className="brand center"><div className="brand-mark"><img src={moonLogo} alt="Project by Tirta" /></div><div><b>Project by Tirta</b><small>People Platform</small></div></div><h1>Selamat datang kembali</h1><p>Masuk ke dashboard HR & payroll.</p><form onSubmit={p.onSubmit}><label>Email<input value={p.email} onChange={e=>p.setEmail(e.target.value)} required/></label><label>PIN / Password<input type="password" value={p.pin} onChange={e=>p.setPin(e.target.value)} required/></label>{p.error&&<div className="form-error">{p.error}</div>}<button className="primary full" disabled={p.loading}>{p.loading?'Memeriksa…':'Masuk ke Dashboard'}</button></form><small className="security-note">Gunakan email dan password Supabase Auth yang diberikan HR.</small></div></div>
+ return <div className="login-wrap"><div className="login-card"><div className="brand center"><div className="brand-mark"><img src={moonLogo} alt="Project by Tirta" /></div><div><b>Project by Tirta</b><small>People Platform</small></div></div><h1>Selamat datang kembali</h1><p>Masuk ke dashboard HR & payroll.</p><form onSubmit={p.onSubmit}><label>Email<input value={p.email} onChange={e=>p.setEmail(e.target.value)} required/></label><label>Password<input type="password" value={p.pin} onChange={e=>p.setPin(e.target.value)} required/></label>{p.error&&<div className="form-error">{p.error}</div>}<button className="primary full" disabled={p.loading}>{p.loading?'Memeriksa…':'Masuk ke Dashboard'}</button></form><small className="security-note">Gunakan email dan password Supabase Auth yang diberikan HR.</small></div></div>
 }
 
 function Heading({
@@ -697,7 +677,7 @@ function Overview({employees,attendance,present,late,payroll,onNavigate,profileN
  const deptRows=Object.entries(dept).sort((a,b)=>b[1]-a[1]).slice(0,5);
  const maxDept=Math.max(1,...deptRows.map(x=>x[1]));
  return <div className="executive-dashboard">
-  <Heading title={profileName || "HR Command Center"} desc="Ringkasan workforce, attendance, dan payroll dalam satu pusat kendali." action="Tambah Karyawan" onAction={()=>onNavigate('employee-add')}/>
+  <Heading title={profileName || "Pusat Kendali HR"} desc="Ringkasan workforce, attendance, dan payroll dalam satu pusat kendali." action="Tambah Karyawan" onAction={()=>onNavigate('employee-add')}/>
   <div className="command-strip">
    <div><span className="eyebrow">OPERATIONAL STATUS</span><strong>Sistem HR aktif</strong><small>Data tersinkron dari database</small></div>
    <div className="strip-meta"><span className="status green">Operational</span><span>Update otomatis saat halaman dimuat</span></div>
@@ -720,8 +700,8 @@ function Overview({employees,attendance,present,late,payroll,onNavigate,profileN
    </div>
   </div>
   <div className="dashboard-grid-bottom">
-   <div className="panel"><div className="panel-head"><div><span className="eyebrow">LIVE FEED</span><h2>Aktivitas Absensi Terbaru</h2><p>Record terbaru yang masuk ke sistem.</p></div><button className="link-btn" onClick={()=>onNavigate('attendance')}>Lihat semua</button></div><AttendanceMini rows={recent}/></div>
-   <div className="panel quick executive-quick"><div className="panel-head"><div><span className="eyebrow">SHORTCUTS</span><h2>Akses cepat</h2><p>Masuk langsung ke proses HR utama.</p></div></div><Quick label="Tambah karyawan" icon="users" onClick={()=>onNavigate('employee-add')}/><Quick label="Jadwal kerja" icon="calendar" onClick={()=>onNavigate('schedule')}/><Quick label="Payroll" icon="payroll" onClick={()=>onNavigate('payroll')}/><Quick label="Pengajuan cuti" icon="request" onClick={()=>onNavigate('leave-request')}/></div>
+   <div className="panel"><div className="panel-head"><div><span className="eyebrow">AKTIVITAS TERBARU</span><h2>Aktivitas Absensi Terbaru</h2><p>Record terbaru yang masuk ke sistem.</p></div><button className="link-btn" onClick={()=>onNavigate('attendance')}>Lihat semua</button></div><AttendanceMini rows={recent}/></div>
+   <div className="panel quick executive-quick"><div className="panel-head"><div><span className="eyebrow">AKSES CEPAT</span><h2>Akses cepat</h2><p>Masuk langsung ke proses HR utama.</p></div></div><Quick label="Tambah karyawan" icon="users" onClick={()=>onNavigate('employee-add')}/><Quick label="Jadwal kerja" icon="calendar" onClick={()=>onNavigate('schedule')}/><Quick label="Payroll" icon="payroll" onClick={()=>onNavigate('payroll')}/><Quick label="Pengajuan cuti" icon="request" onClick={()=>onNavigate('leave-request')}/></div>
   </div>
  </div>
 }
@@ -759,7 +739,7 @@ function Employees({data,onDelete,onEdit,onExport,onAdd,onConfirmEmail}:{data:Ka
  const [selected,setSelected]=useState<string[]>(available.slice(0,9).map(x=>x[0]));
  const toggle=(key:string)=>setSelected(v=>v.includes(key)?v.filter(x=>x!==key):[...v,key]);
  return <><Heading title={t('employees')} desc="Master data workforce yang tersimpan di Supabase." action="Tambah Karyawan" onAction={onAdd}/>
- <div className="toolbar"><b>{data.length} karyawan</b><button className="secondary" onClick={()=>setOpen(true)}>Export Data</button></div>
+ <div className="toolbar"><b>{data.length} karyawan</b><button className="secondary" onClick={()=>setOpen(true)}>Ekspor Data</button></div>
  {open&&<div className="export-backdrop" onMouseDown={e=>{if(e.currentTarget===e.target)setOpen(false)}}>
    <div className="export-card">
     <div className="export-head"><div><span>PEOPLE · EXPORT</span><h2>Export Database Karyawan</h2><p>Pilih kolom yang ingin dimasukkan ke file.</p></div><button className="icon-btn" onClick={()=>setOpen(false)}>×</button></div>
@@ -940,6 +920,7 @@ function AddEmployee({onDone,refresh}:{onDone:()=>void;refresh:()=>void}) {
 }
 
 function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onClose: () => void; onSave: (p: Record<string, unknown>) => void }) {
+  const { t } = useTranslation();
   const [f, setF] = useState({
     nik_ktp: employee.nik_ktp || '',
     id_karyawan: employee.id_karyawan || '',
@@ -1081,7 +1062,7 @@ function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onC
             className="primary"
             onClick={() => {
               if (!f.id_karyawan.trim()) {
-                alert('ID Karyawan wajib diisi.');
+                alert(t('employee_id_required'));
                 return;
               }
               onSave({
@@ -1099,14 +1080,14 @@ function EmployeeEditor({ employee, onClose, onSave }: { employee: Karyawan; onC
   );
 }
 function Branch({title,desc,items,tab,setTab,action,onAction,children}:{title:string;desc:string;items:{key:string;label:string;icon:string}[];tab:string;setTab:(v:string)=>void;action?:string;onAction?:()=>void;children:ReactNode}){return <><Heading title={title} desc={desc} action={action} onAction={onAction}/><div className="branch-nav">{items.map(i=><button key={i.key} className={tab===i.key?'active':''} onClick={()=>setTab(i.key)}><span>{i.icon}</span>{i.label}</button>)}</div>{children}</>}
-function AttendanceModule({type,data,onRefresh,onExport}:{type:MenuKey;data:Absensi[];onRefresh:()=>void;onExport:()=>void}){
+function AttendanceModule({type,data,onRefresh,onExport}:{type:MenuKey;data:Absensi[];onRefresh:()=>void;onExport:()=>void}){const {t}=useTranslation();
  const initial=type==='attendance-today'?'today':type==='late'?'late':type==='leave'?'leave':type==='overtime'?'overtime':type==='selfie'?'selfie':'summary';
  const [tab,setTab]=useState(initial),[open,setOpen]=useState(false),[employees,setEmployees]=useState<Karyawan[]>([]);
  const [f,setF]=useState({id_karyawan:'',tanggal:isoToday(),jam_masuk:'07:00',jam_pulang:'16:00',status:'Hadir',lokasi:'Manual HR',keterangan:''});
  useEffect(()=>{supabase.from('karyawan').select('*').order('nama').then(({data})=>setEmployees(data||[]))},[]);
  const items=[['summary','Rekap','clock'],['today','Hari Ini','check'],['late','Terlambat','alert'],['leave','Izin & Sakit','leave'],['overtime','Lembur','arrow'],['selfie','Monitoring Selfie','camera']];
  let rows=data;if(tab==='today')rows=data.filter(a=>a.tanggal===isoToday());if(tab==='late')rows=data.filter(a=>Number(a.keterlambatan_menit||0)>0||(a.status||'').toLowerCase().includes('terlambat'));if(tab==='leave')rows=data.filter(a=>/izin|sakit/i.test(a.status||''));if(tab==='overtime')rows=data.filter(a=>Number(a.lembur_menit||0)>0);if(tab==='selfie')rows=data.filter(a=>!!a.foto||!!a.selfie_masuk);
- const save=async(e:FormEvent)=>{e.preventDefault();const emp=employees.find(x=>x.id_karyawan===f.id_karyawan);if(!emp)return alert('Pilih karyawan.');const {error}=await supabase.from('absensi').insert({...f,nama:emp.nama,jabatan:emp.jabatan||'',total_jam:'8:00'});if(error)alert(error.message);else{setOpen(false);onRefresh()}};
+ const save=async(e:FormEvent)=>{e.preventDefault();const emp=employees.find(x=>x.id_karyawan===f.id_karyawan);if(!emp)return alert(t('select_employee'));const {error}=await supabase.from('absensi').insert({...f,nama:emp.nama,jabatan:emp.jabatan||'',total_jam:'8:00'});if(error)alert(error.message);else{setOpen(false);onRefresh()}};
  const del=async(id:string)=>{if(confirm('Hapus record absensi ini?')){const {error}=await supabase.from('absensi').delete().eq('id',id);if(error)alert(error.message);else onRefresh()}};
  return <Branch title="Absensi" desc="Rekap, input manual, review keterlambatan, lembur, dan selfie." items={items.map(([key,label,icon])=>({key,label,icon}))} tab={tab} setTab={setTab} action={tab==='summary'?'＋ Input Absensi': 'Export CSV'} onAction={tab==='summary'?()=>setOpen(true):onExport}>
   <div className="stat-grid three"><Stat title="Record" value={String(rows.length)} hint="Data ditampilkan" icon="calendar"/><Stat title="Hadir" value={String(rows.filter(a=>/hadir|tepat|terlambat/i.test(a.status||'')).length)} hint="Kehadiran" icon="check"/><Stat title="Perlu Review" value={String(rows.filter(a=>Number(a.lembur_menit||0)>0||Number(a.keterlambatan_menit||0)>0).length)} hint="Lembur / terlambat" icon="alert"/></div>
@@ -1128,12 +1109,12 @@ function HolidayModule(){
  return <><Heading title="Hari Libur" desc="Kelola tanggal non-working day di database." action="＋ Tambah Hari Libur" onAction={()=>setModal(true)}/>{msg&&<div className="alert">{msg}</div>}<div className="panel table-panel"><div className="table-wrap"><table><thead><tr><th>Tanggal</th><th>Nama</th><th>Tipe</th><th>Aksi</th></tr></thead><tbody>{rows.length?rows.map(r=><tr key={r.id}><td>{r.tanggal}</td><td><b>{r.nama}</b></td><td><Status value={r.tipe}/></td><td><button className="danger-text" onClick={()=>del(r.id)}>Hapus</button></td></tr>):<Empty cols={4}/>}</tbody></table></div></div>{modal&&<SimpleModal title="Tambah Hari Libur" onClose={()=>setModal(false)} onSave={save}><label>Tanggal<input type="date" value={f.tanggal} onChange={e=>setF({...f,tanggal:e.target.value})}/></label><label>Nama Hari Libur<input required value={f.nama} onChange={e=>setF({...f,nama:e.target.value})}/></label><label>Tipe<select value={f.tipe} onChange={e=>setF({...f,tipe:e.target.value})}><option>Nasional</option><option>Perusahaan</option></select></label></SimpleModal>}</>
 }
 
-function LeaveModule({initial}:{initial:MenuKey}){
+function LeaveModule({initial}:{initial:MenuKey}){const {t}=useTranslation();
  const [tab,setTab]=useState(initial==='leave-balance'?'balance':'requests'),[rows,setRows]=useState<any[]>([]),[balances,setBalances]=useState<any[]>([]),[modal,setModal]=useState(false),[employees,setEmployees]=useState<Karyawan[]>([]);
  const [f,setF]=useState({id_karyawan:'',jenis:'Tahunan',tanggal_mulai:isoToday(),tanggal_selesai:isoToday(),jumlah_hari:'1',alasan:'',status:'Menunggu'});
  const load=async()=>{const [a,b,c]=await Promise.all([supabase.from('hris_cuti').select('*').order('created_at',{ascending:false}),supabase.from('hris_saldo_cuti').select('*').eq('tahun',new Date().getFullYear()),supabase.from('karyawan').select('*').order('nama')]);if(!a.error)setRows(a.data||[]);if(!b.error)setBalances(b.data||[]);if(!c.error)setEmployees(c.data||[])};useEffect(()=>{load()},[]);
  const save=async(e:FormEvent)=>{e.preventDefault();const {data,error}=await supabase.from('hris_cuti').insert({...f,jumlah_hari:Number(f.jumlah_hari)}).select('id').single();if(error){alert(error.message);return}if(data){const a=await supabase.rpc('hris_submit_approval',{p_modul:'leave',p_record_id:String(data.id)});if(a.error){await supabase.from('hris_cuti').delete().eq('id',data.id);alert(a.error.message);return}}setModal(false);load()};
- const update=async(id:string,status:string)=>{const {data:req,error:e1}=await supabase.from('hris_approval_requests').select('id').eq('modul','leave').eq('record_id',id).eq('status','Menunggu').maybeSingle();if(e1||!req){alert(e1?.message||'Workflow approval tidak ditemukan.');return}const {error}=await supabase.rpc('hris_decide_approval',{p_id:req.id,p_status:status,p_catatan:status==='Ditolak'?(window.prompt('Alasan penolakan:','')||null):null});if(error)alert(error.message);else load()};
+ const update=async(id:string,status:string)=>{const {data:req,error:e1}=await supabase.from('hris_approval_requests').select('id').eq('modul','leave').eq('record_id',id).eq('status','Menunggu').maybeSingle();if(e1||!req){alert(e1?.message||t('approval_workflow_not_found'));return}const {error}=await supabase.rpc('hris_decide_approval',{p_id:req.id,p_status:status,p_catatan:status==='Ditolak'?(window.prompt(t('rejection_reason_prompt'),'')||null):null});if(error)alert(error.message);else load()};
  const ensureBalance=async(k:string)=>{const found=balances.find(x=>x.id_karyawan===k);if(found)return found;const {data,error}=await supabase.from('hris_saldo_cuti').insert({id_karyawan:k,tahun:new Date().getFullYear(),jenis:'Tahunan',saldo:12,terpakai:0}).select().single();if(error) return null;return data};
  const items=[['inbox','Approval Inbox','request'],['requests','Pengajuan Baru','＋'],['history','Riwayat','calendar'],['balance','Saldo Cuti','balance']].map(([key,label,icon])=>({key,label,icon}));
  return <Branch title="Cuti" desc="Pengajuan, approval, dan saldo cuti tersimpan di database." items={items} tab={tab} setTab={setTab} action={tab==='requests'?'＋ Buat Pengajuan':undefined} onAction={()=>setModal(true)}>{tab==='balance'?<div className="panel table-panel"><div className="table-wrap"><table><thead><tr><th>Karyawan</th><th>Jenis</th><th>Jatah</th><th>Terpakai</th><th>Sisa</th><th>Aksi</th></tr></thead><tbody>{employees.map(k=>{const b=balances.find(x=>x.id_karyawan===k.id_karyawan);const quota=Number((b?.saldo??12))+Number(b?.terpakai??0);const used=Number(b?.terpakai??0);return <tr key={k.id}><td><b>{k.nama}</b><small>{k.id_karyawan}</small></td><td>Tahunan</td><td>{quota}</td><td>{used}</td><td><Status value={String(Math.max(0,quota-used))}/></td><td><button className="link-btn" onClick={()=>k.id_karyawan && ensureBalance(k.id_karyawan).then(load)}>Inisialisasi</button></td></tr>})}</tbody></table></div></div>:<div className="panel table-panel"><div className="table-wrap"><table><thead><tr><th>Karyawan</th><th>Jenis</th><th>Tanggal</th><th>Alasan</th><th>Status</th><th>Aksi</th></tr></thead><tbody>{rows.length?rows.map(r=><tr key={r.id}><td>{r.id_karyawan}</td><td>{r.jenis}</td><td>{r.tanggal_mulai} s/d {r.tanggal_selesai}</td><td>{r.alasan||'-'}</td><td><Status value={r.status}/></td><td>{r.status==='Menunggu'&&<><button className="link-btn" onClick={()=>update(r.id,'Disetujui')}>Setujui</button> <button className="danger-text" onClick={()=>update(r.id,'Ditolak')}>Tolak</button></>}</td></tr>):<Empty cols={6}/>}</tbody></table></div></div>}{modal&&<SimpleModal title="Pengajuan Cuti" onClose={()=>setModal(false)} onSave={save}><label>Karyawan<select required value={f.id_karyawan} onChange={e=>setF({...f,id_karyawan:e.target.value})}><option value="">Pilih karyawan</option>{employees.map(k=><option key={k.id_karyawan} value={k.id_karyawan}>{k.nama} — {k.id_karyawan}</option>)}</select></label><label>Jenis<select value={f.jenis} onChange={e=>setF({...f,jenis:e.target.value})}><option>Tahunan</option><option>Sakit</option><option>Khusus</option></select></label><label>Mulai<input type="date" value={f.tanggal_mulai} onChange={e=>setF({...f,tanggal_mulai:e.target.value})}/></label><label>Selesai<input type="date" value={f.tanggal_selesai} onChange={e=>setF({...f,tanggal_selesai:e.target.value})}/></label><label>Jumlah Hari<input type="number" min="0.5" step="0.5" value={f.jumlah_hari} onChange={e=>setF({...f,jumlah_hari:e.target.value})}/></label><label>Alasan<textarea value={f.alasan} onChange={e=>setF({...f,alasan:e.target.value})}/></label></SimpleModal>}</Branch>
@@ -1152,7 +1133,7 @@ function TalentForm({tab,employees,onClose,onSaved}:{tab:string;employees:Karyaw
  const save=async(e:FormEvent)=>{e.preventDefault();const numeric=['target','realisasi','bobot','skor','jumlah_kebutuhan','nilai'];const payload={...f};numeric.forEach(k=>{if(k in payload)payload[k]=Number(payload[k]||0)});const {error}=await supabase.from(table).insert(payload);if(error)alert(error.message);else onSaved()};
  return <SimpleModal title={`Tambah ${tab==='kpi'?'KPI':tab==='vacancies'?'Lowongan':tab==='candidates'?'Kandidat':tab==='interviews'?'Interview':'Performance'}`} onClose={onClose} onSave={save}>{Object.entries(f).map(([k,v])=><label key={k}>{fieldLabel(k)}{k==='id_karyawan'?<select required value={String(v)} onChange={e=>setF({...f,[k]:e.target.value})}><option value="">Pilih karyawan</option>{employees.map(x=><option key={x.id_karyawan} value={x.id_karyawan}>{x.nama} — {x.id_karyawan}</option>)}</select>:<input required={['nama','posisi','indikator','kandidat'].includes(k)} type={['target','realisasi','bobot','skor','jumlah_kebutuhan','nilai'].includes(k)?'number':k==='tanggal'||k.includes('tanggal')?'date':k==='jam'?'time':'text'} value={String(v??'')} onChange={e=>setF({...f,[k]:e.target.value})}/>}</label>)}</SimpleModal>
 }
-function Reports({employees,attendance,onExport}:{employees:Karyawan[];attendance:Absensi[];onExport:(r:any[],f:string)=>void}){const [tab,setTab]=useState('overview'),[payroll,setPayroll]=useState<any[]>([]);useEffect(()=>{if(tab==='payroll')supabase.from('hris_payroll').select('*').order('created_at',{ascending:false}).limit(2000).then(({data})=>setPayroll(data||[]))},[tab]);const items=[['overview','Analytics','report'],['attendance','Laporan Absensi','clock'],['payroll','Laporan Payroll','payroll'],['people','Laporan Karyawan','users']].map(([key,label,icon])=>({key,label,icon}));return <Branch title="Laporan" desc="Export data nyata dari database." items={items} tab={tab} setTab={setTab}>{tab==='overview'?<div className="report-grid"><ReportCard name="Master Karyawan" count={employees.length} onClick={()=>onExport(employees,'laporan-karyawan.csv')}/><ReportCard name="Absensi" count={attendance.length} onClick={()=>onExport(attendance,'laporan-absensi.csv')}/><ReportCard name="Payroll" count={payroll.length} onClick={()=>onExport(payroll,'laporan-payroll.csv')}/></div>:tab==='attendance'?<ReportCard name="Laporan Absensi" count={attendance.length} onClick={()=>onExport(attendance,'laporan-absensi.csv')}/>:tab==='people'?<ReportCard name="Laporan Karyawan" count={employees.length} onClick={()=>onExport(employees,'laporan-karyawan.csv')}/>:<ReportCard name="Laporan Payroll" count={payroll.length} onClick={()=>onExport(payroll,'laporan-payroll.csv')}/>}</Branch>}
+function Reports({employees,attendance,onExport}:{employees:Karyawan[];attendance:Absensi[];onExport:(r:any[],f:string)=>void}){const [tab,setTab]=useState('overview'),[payroll,setPayroll]=useState<any[]>([]);useEffect(()=>{if(tab==='payroll')supabase.from('hris_payroll').select('*').order('created_at',{ascending:false}).limit(2000).then(({data})=>setPayroll(data||[]))},[tab]);const items=[['overview','Analitik','report'],['attendance','Laporan Absensi','clock'],['payroll','Laporan Payroll','payroll'],['people','Laporan Karyawan','users']].map(([key,label,icon])=>({key,label,icon}));return <Branch title="Laporan" desc="Export data nyata dari database." items={items} tab={tab} setTab={setTab}>{tab==='overview'?<div className="report-grid"><ReportCard name="Master Karyawan" count={employees.length} onClick={()=>onExport(employees,'laporan-karyawan.csv')}/><ReportCard name="Absensi" count={attendance.length} onClick={()=>onExport(attendance,'laporan-absensi.csv')}/><ReportCard name="Payroll" count={payroll.length} onClick={()=>onExport(payroll,'laporan-payroll.csv')}/></div>:tab==='attendance'?<ReportCard name="Laporan Absensi" count={attendance.length} onClick={()=>onExport(attendance,'laporan-absensi.csv')}/>:tab==='people'?<ReportCard name="Laporan Karyawan" count={employees.length} onClick={()=>onExport(employees,'laporan-karyawan.csv')}/>:<ReportCard name="Laporan Payroll" count={payroll.length} onClick={()=>onExport(payroll,'laporan-payroll.csv')}/>}</Branch>}
 function ReportCard({name,count,onClick}:{name:string;count:number;onClick:()=>void}){return <div className="report-card"><span>REPORT</span><h3>{name}</h3><b>{count}</b><p>record tersedia</p><button className="primary" onClick={onClick}>Export CSV</button></div>}
 function Settings(){
   const [f,setF]=useState<any>({
@@ -2155,7 +2136,7 @@ function Audit() {
               background: '#fff',
             }}
           >
-            <option value="ALL">Semua Action</option>
+            <option value="ALL">Semua Aksi</option>
             <option value="CREATE">CREATE</option>
             <option value="UPDATE">UPDATE</option>
             <option value="DELETE">DELETE</option>

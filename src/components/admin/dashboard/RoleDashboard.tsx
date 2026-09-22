@@ -249,7 +249,7 @@ function DashboardHeader({
               marginBottom: 7,
             }}
           >
-            PROJECT BY TIRTA • HR COMMAND CENTER
+            PROJECT BY TIRTA • PUSAT KENDALI HR
           </div>
 
           <h2
@@ -466,7 +466,7 @@ function WorkforceOverview({
               marginBottom: 6,
             }}
           >
-            Attendance Rate
+            Tingkat Kehadiran
           </div>
 
           <strong
@@ -489,7 +489,7 @@ function WorkforceOverview({
           color: '#667085',
         }}
       >
-        Total record absensi: <strong>{totalAttendance}</strong>
+        Total data absensi: <strong>{totalAttendance}</strong>
       </div>
     </div>
   );
@@ -613,7 +613,7 @@ function SuperAdminDashboard({
               color: '#172033',
             }}
           >
-            Quick Actions
+            Akses Cepat
           </h3>
 
           <div
@@ -846,7 +846,7 @@ function HRDDashboard({
               color: '#172033',
             }}
           >
-            HR Management
+            Manajemen HR
           </h3>
 
           <div

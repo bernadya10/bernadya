@@ -3,7 +3,7 @@ export default function ModulPayroll() {
     <div className="payroll-module">
       <div className="page-heading">
         <div><span className="group-title">PAYROLL</span><h1>Payroll & Kompensasi</h1><p>Kelola informasi penggajian dengan tampilan ringkas dan mudah dipantau.</p></div>
-        <button className="primary">Export Laporan</button>
+        <button className="primary">Ekspor Laporan</button>
       </div>
       <div className="stat-grid three">
         <div className="stat-card"><div className="stat-icon">Rp</div><div><small>Total Payroll</small><b>Terintegrasi</b><span>Dengan data kehadiran</span></div></div>

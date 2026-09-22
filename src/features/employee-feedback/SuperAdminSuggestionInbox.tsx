@@ -1,4 +1,5 @@
 import type { Suggestion } from './types';
+import { useTranslation } from '../../locales/LanguageContext';
 
 export default function SuperAdminSuggestionInbox({
   suggestions,
@@ -9,10 +10,12 @@ export default function SuperAdminSuggestionInbox({
   onStatusChange?: (id: string, status: Suggestion['status']) => void;
   onReply?: (id: string, reply: string) => void;
 }) {
+  const { t } = useTranslation();
+
   return (
-    <section aria-label="Super Admin Suggestion Inbox">
+    <section aria-label="Super Admin Kotak Masuk Saran">
       <header>
-        <h2>Suggestion Inbox</h2>
+        <h2>Kotak Masuk Saran</h2>
         <p>Semua saran karyawan yang dikirim untuk ditinjau Super Admin.</p>
       </header>
       {suggestions.length === 0 ? <p>Belum ada saran.</p> : (
@@ -37,7 +40,7 @@ export default function SuperAdminSuggestionInbox({
                   </select>
                 </label>
                 <button type="button" onClick={() => {
-                  const reply = window.prompt('Balasan untuk karyawan:');
+                  const reply = window.prompt(t('employee_reply_prompt'));
                   if (reply?.trim()) onReply?.(s.id, reply.trim());
                 }}>Balas</button>
               </div>

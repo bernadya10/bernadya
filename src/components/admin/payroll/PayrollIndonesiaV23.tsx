@@ -20,7 +20,7 @@ export default function PayrollIndonesiaV23() {
   return <section className="module-page">
     <div className="module-header">
       <div><div className="eyebrow">PAYROLL • INDONESIA</div><h1>Indonesia Payroll Compliance</h1><p>Statutory rule registry, preflight, BPJS/PPh 21 snapshot foundation and annual reconciliation.</p></div>
-      <button className="btn-primary" onClick={load}>Refresh</button>
+      <button className="btn-primary" onClick={load}>Muat Ulang</button>
     </div>
     {message && <div className="alert">{message}</div>}
     <div className="ess-kpis">

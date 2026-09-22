@@ -312,7 +312,7 @@ export default function RegistrasiKaryawan({ onBack }: RegistrasiKaryawanProps) 
 
           <div>
             <strong>Project by Tirta</strong>
-            <span>Human Resources & Workforce Platform</span>
+            <span>Platform Karyawan</span>
           </div>
         </div>
 
@@ -320,7 +320,7 @@ export default function RegistrasiKaryawan({ onBack }: RegistrasiKaryawanProps) 
 
           <div className="registration-heading">
             <span className="registration-eyebrow">
-              EMPLOYEE REGISTRATION
+              REGISTRASI KARYAWAN
             </span>
 
             <h1>Daftar sebagai Karyawan</h1>
@@ -367,7 +367,7 @@ export default function RegistrasiKaryawan({ onBack }: RegistrasiKaryawanProps) 
                   {photoPreview ? (
                     <img
                       src={photoPreview}
-                      alt="Preview"
+                      alt="Pratinjau"
                       style={{
                         width: '100%',
                         height: '100%',

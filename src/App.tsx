@@ -390,7 +390,7 @@ export default function App() {
 
         {view === 'home' && (
           <Home
-            onLogin={() => { setError(''); setLoginOpen(true); }}
+            onMasuk={() => { setError(''); setLoginOpen(true); }}
             onRegister={() => go('register')}
           />
         )}

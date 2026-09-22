@@ -178,7 +178,7 @@ export default function BPJSModule() {
                           <button onClick={() => setEditingId(null)} style={{ padding: '6px 12px', fontSize: '11px', background: '#eef2f7', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Batal</button>
                         </div>
                       ) : (
-                        <button onClick={() => handleEdit(emp)} style={{ padding: '6px 12px', fontSize: '11px', background: '#f8fafc', border: '1px solid #d8dee8', borderRadius: '6px', cursor: 'pointer' }}>Edit BPJS</button>
+                        <button onClick={() => handleEdit(emp)} style={{ padding: '6px 12px', fontSize: '11px', background: '#f8fafc', border: '1px solid #d8dee8', borderRadius: '6px', cursor: 'pointer' }}>Ubah BPJS</button>
                       )}
                     </td>
                   </tr>
